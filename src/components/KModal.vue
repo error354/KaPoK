@@ -7,8 +7,9 @@
     content-class="modal-content"
     overlay-transition="vfm-fade"
     content-transition="vfm-slide-up"
+    @opened="onModalOpened"
   >
-    <div class="modal-wrapper">
+    <div class="modal-wrapper" ref="modalContent">
       <div class="modal-header">
         <h4>{{ title }}</h4>
       </div>
@@ -28,6 +29,7 @@
 <script setup lang="ts">
 import { VueFinalModal } from 'vue-final-modal'
 import KButton from './KButton.vue'
+import { ref } from 'vue'
 
 const props = defineProps({
   title: {
@@ -54,6 +56,7 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['submit', 'update:modelValue'])
+const modalContent = ref<HTMLElement | null>(null)
 
 const closeModal = () => {
   emit('update:modelValue', false)
@@ -62,6 +65,16 @@ const closeModal = () => {
 const submit = () => {
   if (typeof props.onSubmit === 'function') props.onSubmit()
   emit('update:modelValue', false)
+}
+
+const onModalOpened = () => {
+  // Small delay to ensure content is fully rendered
+  setTimeout(() => {
+    const firstInput = modalContent.value?.querySelector('input, textarea, select')
+    if (firstInput instanceof HTMLElement) {
+      firstInput.focus()
+    }
+  }, 10)
 }
 </script>
 

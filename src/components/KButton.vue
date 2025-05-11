@@ -67,7 +67,7 @@ button:focus {
 
 button.outlined {
   background-color: var(--input-color) !important;
-  border: 1px solid var(--color-lightGrey);
+  border: 1px solid var(--color-grey);
   color: var(--color-primary) !important;
 }
 

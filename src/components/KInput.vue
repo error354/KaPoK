@@ -90,6 +90,7 @@ const handleInput = (event: Event) => {
 input {
   flex: 1 1 0%;
   min-width: 0;
-  background-color: rgba(255, 255, 255, 0.6);
+  background-color: var(--input-color);
+  border-color: var(--color-grey);
 }
 </style>
