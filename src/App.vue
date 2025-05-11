@@ -1,66 +1,20 @@
 <template>
   <div class="container row">
     <KColumn title="Dane">
-      <section>
-        <h4>
-          Wkład
-          <KButton
-            size="small"
-            outlined
-            text="Dodaj"
-            icon="plus-circle"
-            @click="newIncomeModal.open"
-          />
-        </h4>
-        <div v-for="(item, idx) in incomes" :key="idx" class="input-row">
-          <KInput
-            :label="item.label"
-            v-model="item.value"
-            type="number"
-            @update:model-value="(val) => (item.value = val)"
-          >
-            <template #buttons>
-              <KButton size="small" outlined icon="edit" @click="openEditModal('income', idx)" />
-              <KButton
-                size="small"
-                outlined
-                icon="trash-2"
-                @click="openDeleteConfirmModal('income', idx)"
-              />
-            </template>
-          </KInput>
-        </div>
-      </section>
-      <section>
-        <h4>
-          Wydatki
-          <KButton
-            size="small"
-            outlined
-            text="Dodaj"
-            icon="plus-circle"
-            @click="newExpenseModal.open"
-          />
-        </h4>
-        <div v-for="(item, idx) in expenses" :key="idx" class="input-row">
-          <KInput
-            :label="item.label"
-            v-model="item.value"
-            type="number"
-            @update:model-value="(val) => (item.value = val)"
-          >
-            <template #buttons>
-              <KButton size="small" outlined icon="edit" @click="openEditModal('expense', idx)" />
-              <KButton
-                size="small"
-                outlined
-                icon="trash-2"
-                @click="openDeleteConfirmModal('expense', idx)"
-              />
-            </template>
-          </KInput>
-        </div>
-      </section>
+      <IncomeSection
+        :items="incomes"
+        @add="newIncomeModal.open"
+        @edit="(idx) => openEditModal('income', idx)"
+        @delete="(idx) => openDeleteConfirmModal('income', idx)"
+        @update:items="(items) => (incomes = items)"
+      />
+      <ExpenseSection
+        :items="expenses"
+        @add="newExpenseModal.open"
+        @edit="(idx) => openEditModal('expense', idx)"
+        @delete="(idx) => openDeleteConfirmModal('expense', idx)"
+        @update:items="(items) => (expenses = items)"
+      />
       <div class="main-buttons">
         <div class="gradient-shadow">
           <KButton text="Oblicz" icon="refresh-cw" icon-color="ffffff" @click="onCalculate" />
@@ -69,31 +23,12 @@
       </div>
     </KColumn>
     <KColumn title="Podsumowanie">
-      <section>
-        <h4>Sumy</h4>
-        <KInput label="Łączny wkład" :model-value="totalIncome" readonly />
-        <KInput label="Łączne wydatki" :model-value="totalExpense" readonly />
-      </section>
-      <section>
-        <h4>Prodentowe udziały</h4>
-        <KInput
-          v-for="(item, idx) in percentShares"
-          :key="item.label + idx"
-          :label="item.label"
-          :model-value="item.value"
-          readonly
-        />
-      </section>
-      <section>
-        <h4>Kwoty do zapłaty</h4>
-        <KInput
-          v-for="(item, idx) in toPay"
-          :key="item.label + idx"
-          :label="item.label"
-          :model-value="item.value"
-          readonly
-        />
-      </section>
+      <SummarySection
+        :total-income="totalIncome"
+        :total-expense="totalExpense"
+        :percent-shares="percentShares"
+        :to-pay="toPay"
+      />
     </KColumn>
     <ModalsContainer />
   </div>
@@ -105,11 +40,13 @@ import { ModalsContainer, useModal } from 'vue-final-modal'
 import { useToast } from 'vue-toastification'
 import KButton from './components/KButton.vue'
 import KColumn from './components/KColumn.vue'
-import KInput from './components/KInput.vue'
-import KModal from './components/KModal.vue'
-import AddModalBody from './components/AddModalBody.vue'
-import EditLabelModalBody from './components/EditLabelModalBody.vue'
-import ConfirmModalBody from './components/ConfirmModalBody.vue'
+import KModal from './components/modal/KModal.vue'
+import IncomeSection from './components/finance/IncomeSection.vue'
+import ExpenseSection from './components/finance/ExpenseSection.vue'
+import SummarySection from './components/finance/SummarySection.vue'
+import AddModalBody from './components/modal/AddModalBody.vue'
+import EditLabelModalBody from './components/modal/EditLabelModalBody.vue'
+import ConfirmModalBody from './components/modal/ConfirmModalBody.vue'
 
 const incomes = ref<{ label: string; value: string }[]>([])
 const percentShares = ref<{ label: string; value: string }[]>([])
@@ -353,10 +290,6 @@ onMounted(loadData)
 </script>
 
 <style scoped>
-section {
-  margin-bottom: 24px;
-}
-
 .main-buttons {
   display: flex;
   gap: 8px;
@@ -364,38 +297,14 @@ section {
   justify-content: space-between;
 }
 
-.input-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 8px;
-}
-.input-row .button.icon {
-  height: 36px;
-  aspect-ratio: 1;
-  padding: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-.input-row .button.icon img {
-  width: 20px;
-  height: 20px;
-  object-fit: contain;
-  display: block;
-  margin: auto;
-}
-.input-row .button:last-child {
-  margin-left: 0;
-}
-
 .gradient-shadow {
   position: relative;
   background: white;
   border-radius: 8px;
-  button {
-    opacity: 1;
-  }
+}
+
+.gradient-shadow button {
+  opacity: 1;
 }
 
 @keyframes gradient-rotate {
@@ -427,6 +336,7 @@ section {
     filter: blur(6px);
   }
 }
+
 .gradient-shadow::before {
   content: '';
   position: absolute;

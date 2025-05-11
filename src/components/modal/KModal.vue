@@ -28,7 +28,7 @@
 
 <script setup lang="ts">
 import { VueFinalModal } from 'vue-final-modal'
-import KButton from './KButton.vue'
+import KButton from '../KButton.vue'
 import { ref } from 'vue'
 
 const props = defineProps({

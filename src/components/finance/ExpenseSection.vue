@@ -1,0 +1,51 @@
+<template>
+  <section>
+    <h4>
+      Wydatki
+      <KButton size="small" outlined text="Dodaj" @click="onAddClick" />
+    </h4>
+    <div v-for="(item, idx) in items" :key="idx" class="input-row">
+      <KInput
+        :label="item.label"
+        v-model="item.value"
+        type="number"
+        @update:model-value="(val) => onValueUpdate(idx, val)"
+      >
+        <template #buttons>
+          <KButton size="small" outlined icon="edit" @click="onEditClick(idx)" />
+          <KButton size="small" outlined icon="trash-2" @click="onDeleteClick(idx)" />
+        </template>
+      </KInput>
+    </div>
+  </section>
+</template>
+
+<script setup lang="ts">
+import { defineProps, defineEmits } from 'vue'
+import KButton from '../KButton.vue'
+import KInput from '../KInput.vue'
+import type { FinanceItem } from '../../types/finance'
+
+const props = defineProps<{
+  items: FinanceItem[]
+}>()
+
+const emit = defineEmits<{
+  (e: 'add'): void
+  (e: 'edit', index: number): void
+  (e: 'delete', index: number): void
+  (e: 'update:items', items: FinanceItem[]): void
+}>()
+
+const onAddClick = () => emit('add')
+
+const onEditClick = (index: number) => emit('edit', index)
+
+const onDeleteClick = (index: number) => emit('delete', index)
+
+const onValueUpdate = (index: number, value: string) => {
+  const newItems = [...props.items]
+  newItems[index] = { ...newItems[index], value }
+  emit('update:items', newItems)
+}
+</script>

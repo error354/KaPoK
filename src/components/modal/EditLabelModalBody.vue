@@ -11,7 +11,7 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import KInput from './KInput.vue'
+import KInput from '../KInput.vue'
 
 const props = defineProps({
   modelValue: String,

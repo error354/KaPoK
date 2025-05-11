@@ -27,8 +27,8 @@ defineProps({
     type: String,
   },
   iconSize: {
-    type: Number,
-    default: 16,
+    type: String,
+    default: '16',
   },
   iconColor: {
     type: String,
