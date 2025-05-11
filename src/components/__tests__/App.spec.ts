@@ -233,6 +233,78 @@ describe('App', () => {
         { label: 'Income 2', value: '100.00 %' },
       ])
     })
+
+    it('#B7 handles negative income values', async () => {
+      const wrapper = mount(App)
+      const vm = wrapper.vm as unknown as AppInstance
+
+      vm.incomes = [
+        { label: 'Income 1', value: '-100' },
+        { label: 'Income 2', value: '200' },
+      ]
+      vm.expenses = [{ label: 'Expense 1', value: '150' }]
+
+      await vm.onCalculate()
+
+      expect(vm.totalIncome).toBe('100.00')
+      expect(vm.percentShares).toEqual([
+        { label: 'Income 1', value: '-100.00 %' },
+        { label: 'Income 2', value: '200.00 %' },
+      ])
+      expect(vm.toPay).toEqual([
+        { label: 'Income 1', value: '-150.00' },
+        { label: 'Income 2', value: '300.00' },
+      ])
+    })
+
+    it('#B8 handles negative expense values', async () => {
+      const wrapper = mount(App)
+      const vm = wrapper.vm as unknown as AppInstance
+
+      vm.incomes = [
+        { label: 'Income 1', value: '100' },
+        { label: 'Income 2', value: '200' },
+      ]
+      vm.expenses = [
+        { label: 'Expense 1', value: '-50' },
+        { label: 'Expense 2', value: '75' },
+      ]
+
+      await vm.onCalculate()
+
+      expect(vm.totalExpense).toBe('25.00')
+      expect(vm.toPay).toEqual([
+        { label: 'Income 1', value: '8.33' },
+        { label: 'Income 2', value: '16.67' },
+      ])
+    })
+
+    it('#B9 handles all negative values', async () => {
+      const wrapper = mount(App)
+      const vm = wrapper.vm as unknown as AppInstance
+
+      vm.incomes = [
+        { label: 'Income 1', value: '-100' },
+        { label: 'Income 2', value: '-200' },
+      ]
+      vm.expenses = [
+        { label: 'Expense 1', value: '-50' },
+        { label: 'Expense 2', value: '-75' },
+      ]
+
+      await vm.onCalculate()
+
+      expect(vm.totalIncome).toBe('-300.00')
+      expect(vm.totalExpense).toBe('-125.00')
+      expect(vm.percentShares).toEqual([
+        { label: 'Income 1', value: '0.00 %' },
+        { label: 'Income 2', value: '0.00 %' },
+      ])
+      expect(vm.toPay).toEqual([
+        { label: 'Income 1', value: '0.00' },
+        { label: 'Income 2', value: '0.00' },
+      ])
+    })
   })
 
   describe('CRUD Operations', () => {
