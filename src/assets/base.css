@@ -1,0 +1,10 @@
+:root {
+  --grid-maxWidth: 130rem;
+  --grid-gutter: 8rem;
+  --columnBgC: rgb(249, 249, 251);
+  --input-color: #fff;
+  --color-primary: #000;
+  --outilned-focus-color: #000f;
+  --column-shadow-color: #4445;
+  --transition: all 0.2s ease;
+}
