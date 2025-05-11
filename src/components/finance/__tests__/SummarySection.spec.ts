@@ -17,7 +17,7 @@ describe('SummarySection', () => {
   it('#A1 renders all section titles', () => {
     const wrapper = mount(SummarySection, {
       props: {
-        totalIncome: '300.00',
+        totalContribution: '300.00',
         totalExpense: '150.00',
         percentShares: [],
         toPay: [],
@@ -25,15 +25,15 @@ describe('SummarySection', () => {
     })
     const titles = wrapper.findAll('h4')
     expect(titles).toHaveLength(3)
-    expect(titles[0].text()).toContain('Sumy')
-    expect(titles[1].text()).toContain('Procentowe udziały')
-    expect(titles[2].text()).toContain('Kwoty do zapłaty')
+    expect(titles[0].text()).toContain('Sums')
+    expect(titles[1].text()).toContain('Percent share')
+    expect(titles[2].text()).toContain('To pay')
   })
 
-  it('#A2 displays total income and expense values', () => {
+  it('#A2 displays total contribution and expense values', () => {
     const wrapper = mount(SummarySection, {
       props: {
-        totalIncome: '300.00',
+        totalContribution: '300.00',
         totalExpense: '150.00',
         percentShares: [],
         toPay: [],
@@ -47,7 +47,7 @@ describe('SummarySection', () => {
   it('#A3 displays percent shares when provided', () => {
     const wrapper = mount(SummarySection, {
       props: {
-        totalIncome: '300.00',
+        totalContribution: '300.00',
         totalExpense: '150.00',
         percentShares: mockPersons,
         toPay: [],
@@ -61,7 +61,7 @@ describe('SummarySection', () => {
   it('#A4 displays amounts to pay when provided', () => {
     const wrapper = mount(SummarySection, {
       props: {
-        totalIncome: '300.00',
+        totalContribution: '300.00',
         totalExpense: '150.00',
         percentShares: [],
         toPay: mockToPay,
@@ -75,7 +75,7 @@ describe('SummarySection', () => {
   it('#A5 applies readonly attribute to all inputs', () => {
     const wrapper = mount(SummarySection, {
       props: {
-        totalIncome: '300.00',
+        totalContribution: '300.00',
         totalExpense: '150.00',
         percentShares: mockPersons,
         toPay: mockToPay,
@@ -90,15 +90,15 @@ describe('SummarySection', () => {
   it('#A6 displays correct labels for all inputs', () => {
     const wrapper = mount(SummarySection, {
       props: {
-        totalIncome: '300.00',
+        totalContribution: '300.00',
         totalExpense: '150.00',
         percentShares: mockPersons,
         toPay: mockToPay,
       },
     })
     const labels = wrapper.findAll('label')
-    expect(labels[0].text()).toBe('Łączny wkład')
-    expect(labels[1].text()).toBe('Łączne wydatki')
+    expect(labels[0].text()).toBe('Total contribution')
+    expect(labels[1].text()).toBe('Total expense')
     expect(labels[2].text()).toBe('Person 1')
     expect(labels[3].text()).toBe('Person 2')
     expect(labels[4].text()).toBe('Person 1')

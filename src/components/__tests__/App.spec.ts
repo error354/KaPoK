@@ -3,22 +3,22 @@ import { mount } from '@vue/test-utils'
 import App from '../../App.vue'
 
 interface AppInstance {
-  incomes: { label: string; value: string }[]
+  contributions: { label: string; value: string }[]
   expenses: { label: string; value: string }[]
   percentShares: { label: string; value: string }[]
   toPay: { label: string; value: string }[]
-  totalIncome: string
+  totalContribution: string
   totalExpense: string
-  handleIncomeAdd: (name: string, amount: string) => void
+  handleContributionAdd: (name: string, amount: string) => void
   handleExpenseAdd: (name: string, amount: string) => void
-  handleEdit: (type: 'income' | 'expense', index: number, newLabel: string) => void
-  handleDelete: (type: 'income' | 'expense', index: number) => void
+  handleEdit: (type: 'contribution' | 'expense', index: number, newLabel: string) => void
+  handleDelete: (type: 'contribution' | 'expense', index: number) => void
   saveData: () => void
   onCalculate: () => void
-  newIncomeModal: { open: () => Promise<void> }
+  newContributionModal: { open: () => Promise<void> }
   newExpenseModal: { open: () => Promise<void> }
-  openEditModal: (type: 'income' | 'expense', idx: number, currentLabel: string) => void
-  openDeleteConfirmModal: (type: 'income' | 'expense', idx: number) => void
+  openEditModal: (type: 'contribution' | 'expense', idx: number, currentLabel: string) => void
+  openDeleteConfirmModal: (type: 'contribution' | 'expense', idx: number) => void
 }
 
 // Mock vue-toastification
@@ -65,16 +65,16 @@ describe('App', () => {
 
   describe('Data Management', () => {
     it('#A1 loads saved data on mount', () => {
-      const savedIncomes = [{ label: 'Test Income', value: '100' }]
+      const savedContributions = [{ label: 'Test Contribution', value: '100' }]
       const savedExpenses = [{ label: 'Test Expense', value: '50' }]
 
-      localStorage.setItem('incomes', JSON.stringify(savedIncomes))
+      localStorage.setItem('contributions', JSON.stringify(savedContributions))
       localStorage.setItem('expenses', JSON.stringify(savedExpenses))
 
       const wrapper = mount(App)
       const vm = wrapper.vm as unknown as AppInstance
 
-      expect(vm.incomes).toEqual(savedIncomes)
+      expect(vm.contributions).toEqual(savedContributions)
       expect(vm.expenses).toEqual(savedExpenses)
     })
 
@@ -83,9 +83,9 @@ describe('App', () => {
       const vm = wrapper.vm as unknown as AppInstance
 
       // Set up test data directly instead of using modal submits
-      vm.incomes = [
-        { label: 'Test Income 1', value: '100' },
-        { label: 'Test Income 2', value: '200' },
+      vm.contributions = [
+        { label: 'Test Contribution 1', value: '100' },
+        { label: 'Test Contribution 2', value: '200' },
       ]
       vm.expenses = [
         { label: 'Test Expense 1', value: '50' },
@@ -95,7 +95,10 @@ describe('App', () => {
       // Trigger save
       await vm.saveData()
 
-      expect(localStorage.setItem).toHaveBeenCalledWith('incomes', JSON.stringify(vm.incomes))
+      expect(localStorage.setItem).toHaveBeenCalledWith(
+        'contributions',
+        JSON.stringify(vm.contributions),
+      )
       expect(localStorage.setItem).toHaveBeenCalledWith('expenses', JSON.stringify(vm.expenses))
     })
 
@@ -103,18 +106,18 @@ describe('App', () => {
       const wrapper = mount(App)
       const vm = wrapper.vm as unknown as AppInstance
 
-      expect(vm.incomes).toEqual([])
+      expect(vm.contributions).toEqual([])
       expect(vm.expenses).toEqual([])
     })
 
     it('#A4 handles invalid JSON in localStorage', () => {
-      localStorage.setItem('incomes', 'invalid-json')
+      localStorage.setItem('contributions', 'invalid-json')
       localStorage.setItem('expenses', 'invalid-json')
 
       const wrapper = mount(App)
       const vm = wrapper.vm as unknown as AppInstance
 
-      expect(vm.incomes).toEqual([])
+      expect(vm.contributions).toEqual([])
       expect(vm.expenses).toEqual([])
     })
   })
@@ -125,9 +128,9 @@ describe('App', () => {
       const vm = wrapper.vm as unknown as AppInstance
 
       // Set up test data
-      vm.incomes = [
-        { label: 'Income 1', value: '100' },
-        { label: 'Income 2', value: '200' },
+      vm.contributions = [
+        { label: 'Contribution 1', value: '100' },
+        { label: 'Contribution 2', value: '200' },
       ]
       vm.expenses = [
         { label: 'Expense 1', value: '150' },
@@ -136,7 +139,7 @@ describe('App', () => {
 
       await vm.onCalculate()
 
-      expect(vm.totalIncome).toBe('300.00')
+      expect(vm.totalContribution).toBe('300.00')
       expect(vm.totalExpense).toBe('200.00')
     })
 
@@ -144,17 +147,17 @@ describe('App', () => {
       const wrapper = mount(App)
       const vm = wrapper.vm as unknown as AppInstance
 
-      vm.incomes = [
-        { label: 'Income 1', value: '100' },
-        { label: 'Income 2', value: '200' },
+      vm.contributions = [
+        { label: 'Contribution 1', value: '100' },
+        { label: 'Contribution 2', value: '200' },
       ]
       vm.expenses = [{ label: 'Expense 1', value: '150' }]
 
       await vm.onCalculate()
 
       expect(vm.percentShares).toEqual([
-        { label: 'Income 1', value: '33.33 %' },
-        { label: 'Income 2', value: '66.67 %' },
+        { label: 'Contribution 1', value: '33.33 %' },
+        { label: 'Contribution 2', value: '66.67 %' },
       ])
     })
 
@@ -162,30 +165,30 @@ describe('App', () => {
       const wrapper = mount(App)
       const vm = wrapper.vm as unknown as AppInstance
 
-      vm.incomes = [
-        { label: 'Income 1', value: '100' },
-        { label: 'Income 2', value: '200' },
+      vm.contributions = [
+        { label: 'Contribution 1', value: '100' },
+        { label: 'Contribution 2', value: '200' },
       ]
       vm.expenses = [{ label: 'Expense 1', value: '150' }]
 
       await vm.onCalculate()
 
       expect(vm.toPay).toEqual([
-        { label: 'Income 1', value: '50.00' },
-        { label: 'Income 2', value: '100.00' },
+        { label: 'Contribution 1', value: '50.00' },
+        { label: 'Contribution 2', value: '100.00' },
       ])
     })
 
-    it('#B4 handles empty income list', async () => {
+    it('#B4 handles empty contribution list', async () => {
       const wrapper = mount(App)
       const vm = wrapper.vm as unknown as AppInstance
 
-      vm.incomes = []
+      vm.contributions = []
       vm.expenses = [{ label: 'Expense 1', value: '150' }]
 
       await vm.onCalculate()
 
-      expect(vm.totalIncome).toBe('0.00')
+      expect(vm.totalContribution).toBe('0.00')
       expect(vm.percentShares).toEqual([])
       expect(vm.toPay).toEqual([])
     })
@@ -194,23 +197,23 @@ describe('App', () => {
       const wrapper = mount(App)
       const vm = wrapper.vm as unknown as AppInstance
 
-      vm.incomes = [
-        { label: 'Income 1', value: '0' },
-        { label: 'Income 2', value: '0' },
+      vm.contributions = [
+        { label: 'Contribution 1', value: '0' },
+        { label: 'Contribution 2', value: '0' },
       ]
       vm.expenses = [{ label: 'Expense 1', value: '0' }]
 
       await vm.onCalculate()
 
-      expect(vm.totalIncome).toBe('0.00')
+      expect(vm.totalContribution).toBe('0.00')
       expect(vm.totalExpense).toBe('0.00')
       expect(vm.percentShares).toEqual([
-        { label: 'Income 1', value: '0.00 %' },
-        { label: 'Income 2', value: '0.00 %' },
+        { label: 'Contribution 1', value: '0.00 %' },
+        { label: 'Contribution 2', value: '0.00 %' },
       ])
       expect(vm.toPay).toEqual([
-        { label: 'Income 1', value: '0.00' },
-        { label: 'Income 2', value: '0.00' },
+        { label: 'Contribution 1', value: '0.00' },
+        { label: 'Contribution 2', value: '0.00' },
       ])
     })
 
@@ -218,42 +221,42 @@ describe('App', () => {
       const wrapper = mount(App)
       const vm = wrapper.vm as unknown as AppInstance
 
-      vm.incomes = [
-        { label: 'Income 1', value: 'invalid' },
-        { label: 'Income 2', value: '200' },
+      vm.contributions = [
+        { label: 'Contribution 1', value: 'invalid' },
+        { label: 'Contribution 2', value: '200' },
       ]
       vm.expenses = [{ label: 'Expense 1', value: 'not-a-number' }]
 
       await vm.onCalculate()
 
-      expect(vm.totalIncome).toBe('200.00')
+      expect(vm.totalContribution).toBe('200.00')
       expect(vm.totalExpense).toBe('0.00')
       expect(vm.percentShares).toEqual([
-        { label: 'Income 1', value: '0.00 %' },
-        { label: 'Income 2', value: '100.00 %' },
+        { label: 'Contribution 1', value: '0.00 %' },
+        { label: 'Contribution 2', value: '100.00 %' },
       ])
     })
 
-    it('#B7 handles negative income values', async () => {
+    it('#B7 handles negative contribution values', async () => {
       const wrapper = mount(App)
       const vm = wrapper.vm as unknown as AppInstance
 
-      vm.incomes = [
-        { label: 'Income 1', value: '-100' },
-        { label: 'Income 2', value: '200' },
+      vm.contributions = [
+        { label: 'Contribution 1', value: '-100' },
+        { label: 'Contribution 2', value: '200' },
       ]
       vm.expenses = [{ label: 'Expense 1', value: '150' }]
 
       await vm.onCalculate()
 
-      expect(vm.totalIncome).toBe('100.00')
+      expect(vm.totalContribution).toBe('100.00')
       expect(vm.percentShares).toEqual([
-        { label: 'Income 1', value: '-100.00 %' },
-        { label: 'Income 2', value: '200.00 %' },
+        { label: 'Contribution 1', value: '-100.00 %' },
+        { label: 'Contribution 2', value: '200.00 %' },
       ])
       expect(vm.toPay).toEqual([
-        { label: 'Income 1', value: '-150.00' },
-        { label: 'Income 2', value: '300.00' },
+        { label: 'Contribution 1', value: '-150.00' },
+        { label: 'Contribution 2', value: '300.00' },
       ])
     })
 
@@ -261,9 +264,9 @@ describe('App', () => {
       const wrapper = mount(App)
       const vm = wrapper.vm as unknown as AppInstance
 
-      vm.incomes = [
-        { label: 'Income 1', value: '100' },
-        { label: 'Income 2', value: '200' },
+      vm.contributions = [
+        { label: 'Contribution 1', value: '100' },
+        { label: 'Contribution 2', value: '200' },
       ]
       vm.expenses = [
         { label: 'Expense 1', value: '-50' },
@@ -274,8 +277,8 @@ describe('App', () => {
 
       expect(vm.totalExpense).toBe('25.00')
       expect(vm.toPay).toEqual([
-        { label: 'Income 1', value: '8.33' },
-        { label: 'Income 2', value: '16.67' },
+        { label: 'Contribution 1', value: '8.33' },
+        { label: 'Contribution 2', value: '16.67' },
       ])
     })
 
@@ -283,9 +286,9 @@ describe('App', () => {
       const wrapper = mount(App)
       const vm = wrapper.vm as unknown as AppInstance
 
-      vm.incomes = [
-        { label: 'Income 1', value: '-100' },
-        { label: 'Income 2', value: '-200' },
+      vm.contributions = [
+        { label: 'Contribution 1', value: '-100' },
+        { label: 'Contribution 2', value: '-200' },
       ]
       vm.expenses = [
         { label: 'Expense 1', value: '-50' },
@@ -294,30 +297,30 @@ describe('App', () => {
 
       await vm.onCalculate()
 
-      expect(vm.totalIncome).toBe('-300.00')
+      expect(vm.totalContribution).toBe('-300.00')
       expect(vm.totalExpense).toBe('-125.00')
       expect(vm.percentShares).toEqual([
-        { label: 'Income 1', value: '0.00 %' },
-        { label: 'Income 2', value: '0.00 %' },
+        { label: 'Contribution 1', value: '0.00 %' },
+        { label: 'Contribution 2', value: '0.00 %' },
       ])
       expect(vm.toPay).toEqual([
-        { label: 'Income 1', value: '0.00' },
-        { label: 'Income 2', value: '0.00' },
+        { label: 'Contribution 1', value: '0.00' },
+        { label: 'Contribution 2', value: '0.00' },
       ])
     })
   })
 
   describe('CRUD Operations', () => {
-    it('#C1 adds new income', async () => {
+    it('#C1 adds new contribution', async () => {
       const wrapper = mount(App)
       const vm = wrapper.vm as unknown as AppInstance
-      const initialLength = vm.incomes.length
+      const initialLength = vm.contributions.length
 
-      vm.handleIncomeAdd('New Income', '100')
+      vm.handleContributionAdd('New Contribution', '100')
 
-      expect(vm.incomes.length).toBe(initialLength + 1)
-      expect(vm.incomes[initialLength]).toEqual({
-        label: 'New Income',
+      expect(vm.contributions.length).toBe(initialLength + 1)
+      expect(vm.contributions[initialLength]).toEqual({
+        label: 'New Contribution',
         value: '100',
       })
     })
@@ -336,32 +339,32 @@ describe('App', () => {
       })
     })
 
-    it('#C3 edits income label', async () => {
+    it('#C3 edits contribution label', async () => {
       const wrapper = mount(App)
       const vm = wrapper.vm as unknown as AppInstance
 
-      vm.incomes = [{ label: 'Old Label', value: '100' }]
+      vm.contributions = [{ label: 'Old Label', value: '100' }]
       vm.percentShares = [{ label: 'Old Label', value: '' }]
       vm.toPay = [{ label: 'Old Label', value: '' }]
 
-      vm.handleEdit('income', 0, 'New Label')
+      vm.handleEdit('contribution', 0, 'New Label')
 
-      expect(vm.incomes[0].label).toBe('New Label')
+      expect(vm.contributions[0].label).toBe('New Label')
       expect(vm.percentShares[0].label).toBe('New Label')
       expect(vm.toPay[0].label).toBe('New Label')
     })
 
-    it('#C4 deletes income', async () => {
+    it('#C4 deletes contribution', async () => {
       const wrapper = mount(App)
       const vm = wrapper.vm as unknown as AppInstance
 
-      vm.incomes = [{ label: 'Test Income', value: '100' }]
-      vm.percentShares = [{ label: 'Test Income', value: '' }]
-      vm.toPay = [{ label: 'Test Income', value: '' }]
+      vm.contributions = [{ label: 'Test Contribution', value: '100' }]
+      vm.percentShares = [{ label: 'Test Contribution', value: '' }]
+      vm.toPay = [{ label: 'Test Contribution', value: '' }]
 
-      vm.handleDelete('income', 0)
+      vm.handleDelete('contribution', 0)
 
-      expect(vm.incomes.length).toBe(0)
+      expect(vm.contributions.length).toBe(0)
       expect(vm.percentShares.length).toBe(0)
       expect(vm.toPay.length).toBe(0)
     })
@@ -377,15 +380,15 @@ describe('App', () => {
       expect(vm.expenses.length).toBe(0)
     })
 
-    it('#C6 handles empty label for income', () => {
+    it('#C6 handles empty label for contribution', () => {
       const wrapper = mount(App)
       const vm = wrapper.vm as unknown as AppInstance
-      const initialLength = vm.incomes.length
+      const initialLength = vm.contributions.length
 
-      vm.handleIncomeAdd('', '100')
+      vm.handleContributionAdd('', '100')
 
-      expect(vm.incomes.length).toBe(initialLength + 1)
-      expect(vm.incomes[initialLength]).toEqual({
+      expect(vm.contributions.length).toBe(initialLength + 1)
+      expect(vm.contributions[initialLength]).toEqual({
         label: '',
         value: '100',
       })
@@ -409,30 +412,30 @@ describe('App', () => {
       const wrapper = mount(App)
       const vm = wrapper.vm as unknown as AppInstance
 
-      vm.incomes = [{ label: 'Test Income', value: '100' }]
-      vm.percentShares = [{ label: 'Test Income', value: '' }]
-      vm.toPay = [{ label: 'Test Income', value: '' }]
+      vm.contributions = [{ label: 'Test Contribution', value: '100' }]
+      vm.percentShares = [{ label: 'Test Contribution', value: '' }]
+      vm.toPay = [{ label: 'Test Contribution', value: '' }]
 
       // Should not throw error when editing non-existent index
-      vm.handleEdit('income', 999, 'New Label')
+      vm.handleEdit('contribution', 999, 'New Label')
 
-      expect(vm.incomes[0].label).toBe('Test Income')
-      expect(vm.percentShares[0].label).toBe('Test Income')
-      expect(vm.toPay[0].label).toBe('Test Income')
+      expect(vm.contributions[0].label).toBe('Test Contribution')
+      expect(vm.percentShares[0].label).toBe('Test Contribution')
+      expect(vm.toPay[0].label).toBe('Test Contribution')
     })
 
     it('#C9 handles deleting non-existent index', () => {
       const wrapper = mount(App)
       const vm = wrapper.vm as unknown as AppInstance
 
-      vm.incomes = [{ label: 'Test Income', value: '100' }]
-      vm.percentShares = [{ label: 'Test Income', value: '' }]
-      vm.toPay = [{ label: 'Test Income', value: '' }]
+      vm.contributions = [{ label: 'Test Contribution', value: '100' }]
+      vm.percentShares = [{ label: 'Test Contribution', value: '' }]
+      vm.toPay = [{ label: 'Test Contribution', value: '' }]
 
       // Should not throw error when deleting non-existent index
-      vm.handleDelete('income', 999)
+      vm.handleDelete('contribution', 999)
 
-      expect(vm.incomes.length).toBe(1)
+      expect(vm.contributions.length).toBe(1)
       expect(vm.percentShares.length).toBe(1)
       expect(vm.toPay.length).toBe(1)
     })

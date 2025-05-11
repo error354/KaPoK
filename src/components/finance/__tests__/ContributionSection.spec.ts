@@ -1,34 +1,34 @@
 import { describe, it, expect } from 'vitest'
 import { mount } from '@vue/test-utils'
-import IncomeSection from '../IncomeSection.vue'
+import ContributionSection from '../ContributionSection.vue'
 import type { FinanceItem } from '../../../types/finance'
 
-describe('IncomeSection', () => {
+describe('ContributionSection', () => {
   const mockItems: FinanceItem[] = [
-    { label: 'Income 1', value: '100' },
-    { label: 'Income 2', value: '200' },
+    { label: 'Contribution 1', value: '100' },
+    { label: 'Contribution 2', value: '200' },
   ]
 
   it('#A1 renders section title', () => {
-    const wrapper = mount(IncomeSection, {
+    const wrapper = mount(ContributionSection, {
       props: {
         items: [],
       },
     })
-    expect(wrapper.find('h4').text()).toContain('Wkład')
+    expect(wrapper.find('h4').text()).toContain('Contribution')
   })
 
   it('#A2 renders add button', () => {
-    const wrapper = mount(IncomeSection, {
+    const wrapper = mount(ContributionSection, {
       props: {
         items: [],
       },
     })
-    expect(wrapper.find('button').text()).toBe('Dodaj')
+    expect(wrapper.find('button').text()).toBe('Add')
   })
 
-  it('#A3 renders list of income items', () => {
-    const wrapper = mount(IncomeSection, {
+  it('#A3 renders list of contribution items', () => {
+    const wrapper = mount(ContributionSection, {
       props: {
         items: mockItems,
       },
@@ -40,7 +40,7 @@ describe('IncomeSection', () => {
   })
 
   it('#A4 emits add event when add button is clicked', async () => {
-    const wrapper = mount(IncomeSection, {
+    const wrapper = mount(ContributionSection, {
       props: {
         items: [],
       },
@@ -50,7 +50,7 @@ describe('IncomeSection', () => {
   })
 
   it('#A5 emits edit event when edit button is clicked', async () => {
-    const wrapper = mount(IncomeSection, {
+    const wrapper = mount(ContributionSection, {
       props: {
         items: mockItems,
       },
@@ -60,7 +60,7 @@ describe('IncomeSection', () => {
   })
 
   it('#A6 emits delete event when delete button is clicked', async () => {
-    const wrapper = mount(IncomeSection, {
+    const wrapper = mount(ContributionSection, {
       props: {
         items: mockItems,
       },
@@ -70,7 +70,7 @@ describe('IncomeSection', () => {
   })
 
   it('#A7 emits update:items when input value changes', async () => {
-    const wrapper = mount(IncomeSection, {
+    const wrapper = mount(ContributionSection, {
       props: {
         items: mockItems,
       },
@@ -81,14 +81,14 @@ describe('IncomeSection', () => {
   })
 
   it('#A8 maintains item order after updates', async () => {
-    const wrapper = mount(IncomeSection, {
+    const wrapper = mount(ContributionSection, {
       props: {
         items: mockItems,
       },
     })
     await wrapper.find('input').setValue('150')
     const updatedItems = wrapper.emitted('update:items')?.[0][0] as FinanceItem[]
-    expect(updatedItems[0].label).toBe('Income 1')
-    expect(updatedItems[1].label).toBe('Income 2')
+    expect(updatedItems[0].label).toBe('Contribution 1')
+    expect(updatedItems[1].label).toBe('Contribution 2')
   })
 })

@@ -1,5 +1,6 @@
 import { ref, h, reactive, watch } from 'vue'
 import { useModal } from 'vue-final-modal'
+import { useI18n } from 'vue-i18n'
 import type { FinanceType } from '../types/finance'
 import KModal from '../components/modal/KModal.vue'
 import AddModalBody from '../components/modal/AddModalBody.vue'
@@ -7,22 +8,23 @@ import EditLabelModalBody from '../components/modal/EditLabelModalBody.vue'
 import ConfirmModalBody from '../components/modal/ConfirmModalBody.vue'
 
 export const useFinanceModals = (
-  onIncomeAdd: (name: string, amount: string) => void,
+  onContributionAdd: (name: string, amount: string) => void,
   onExpenseAdd: (name: string, amount: string) => void,
   onEdit: (type: FinanceType, index: number, newLabel: string) => void,
   onDelete: (type: FinanceType, index: number) => void,
 ) => {
+  const { t } = useI18n()
   const editType = ref<FinanceType | null>(null)
   const editIdx = ref<number | null>(null)
   const editLabel = ref('')
   const deleteType = ref<FinanceType | null>(null)
   const deleteIdx = ref<number | null>(null)
 
-  const isIncomeModalValid = ref(false)
+  const isContributionModalValid = ref(false)
   const isExpenseModalValid = ref(false)
   const isEditModalValid = ref(false)
 
-  const incomeModalBodyRef = ref<{ submit: () => { name: string; amount: string } }>({
+  const contributionModalBodyRef = ref<{ submit: () => { name: string; amount: string } }>({
     submit: () => ({ name: '', amount: '' }),
   })
   const expenseModalBodyRef = ref<{ submit: () => { name: string; amount: string } }>({
@@ -39,7 +41,7 @@ export const useFinanceModals = (
   ]
 
   const editModalAttrs = reactive({
-    title: 'Edytuj nazwę',
+    title: t('editName'),
     modelValue: false,
     onSubmit: () => {
       if (editType.value && editIdx.value !== null && editLabel.value) {
@@ -61,37 +63,37 @@ export const useFinanceModals = (
     },
   })
 
-  // Income Modal
-  const incomeModalContent = () => [
+  // Contribution Modal
+  const contributionModalContent = () => [
     h(AddModalBody, {
-      ref: incomeModalBodyRef,
-      nameLabel: 'Nazwa wkładu',
-      amountLabel: 'Kwota wkładu',
-      'onUpdate:isValid': (val: boolean) => (isIncomeModalValid.value = val),
+      ref: contributionModalBodyRef,
+      nameLabel: t('contributionName'),
+      amountLabel: t('contributionAmount'),
+      'onUpdate:isValid': (val: boolean) => (isContributionModalValid.value = val),
     }),
   ]
 
-  const incomeModalAttrs = reactive({
-    title: 'Dodaj nowy wkład',
+  const contributionModalAttrs = reactive({
+    title: t('addContribution'),
     modelValue: false,
     onSubmit: () => {
-      const { name, amount } = incomeModalBodyRef.value.submit()
+      const { name, amount } = contributionModalBodyRef.value.submit()
       if (name && amount) {
-        onIncomeAdd(name, amount)
+        onContributionAdd(name, amount)
       }
     },
     disabled: true,
   })
 
-  watch(isIncomeModalValid, (val) => {
-    incomeModalAttrs.disabled = !val
+  watch(isContributionModalValid, (val) => {
+    contributionModalAttrs.disabled = !val
   })
 
-  const newIncomeModal = useModal({
+  const newContributionModal = useModal({
     component: KModal,
-    attrs: incomeModalAttrs,
+    attrs: contributionModalAttrs,
     slots: {
-      default: incomeModalContent,
+      default: contributionModalContent,
     },
   })
 
@@ -99,14 +101,14 @@ export const useFinanceModals = (
   const expenseModalContent = () => [
     h(AddModalBody, {
       ref: expenseModalBodyRef,
-      nameLabel: 'Nazwa wydatku',
-      amountLabel: 'Kwota wydatku',
+      nameLabel: t('expenseName'),
+      amountLabel: t('expenseAmount'),
       'onUpdate:isValid': (val: boolean) => (isExpenseModalValid.value = val),
     }),
   ]
 
   const expenseModalAttrs = reactive({
-    title: 'Dodaj nowy wydatek',
+    title: t('addExpense'),
     modelValue: false,
     onSubmit: () => {
       const { name, amount } = expenseModalBodyRef.value.submit()
@@ -133,10 +135,10 @@ export const useFinanceModals = (
   const confirmModal = useModal({
     component: KModal,
     attrs: {
-      title: 'Potwierdź usunięcie',
+      title: t('confirmDelete'),
       modelValue: false,
-      confirmText: 'Tak',
-      cancelText: 'Nie',
+      confirmText: t('yes'),
+      cancelText: t('no'),
       disabled: false,
       onSubmit: () => {
         if (deleteType.value && deleteIdx.value !== null) {
@@ -148,9 +150,9 @@ export const useFinanceModals = (
       default: () => [
         h(ConfirmModalBody, {
           message:
-            deleteType.value === 'income'
-              ? 'Czy na pewno chcesz usunąć ten wkład?'
-              : 'Czy na pewno chcesz usunąć ten wydatek?',
+            deleteType.value === 'contribution'
+              ? t('confirmDeleteContribution')
+              : t('confirmDeleteExpense'),
         }),
       ],
     },
@@ -170,7 +172,7 @@ export const useFinanceModals = (
   }
 
   return {
-    newIncomeModal,
+    newContributionModal,
     newExpenseModal,
     openEditModal,
     openDeleteConfirmModal,

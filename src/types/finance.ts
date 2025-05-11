@@ -3,4 +3,4 @@ export type FinanceItem = {
   value: string
 }
 
-export type FinanceType = 'income' | 'expense'
+export type FinanceType = 'contribution' | 'expense'

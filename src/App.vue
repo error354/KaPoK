@@ -1,12 +1,12 @@
 <template>
   <div class="container row">
-    <KColumn title="Dane">
-      <IncomeSection
-        :items="incomes"
-        @add="newIncomeModal.open"
-        @edit="(idx) => openEditModal('income', idx, incomes[idx].label)"
-        @delete="(idx) => openDeleteConfirmModal('income', idx)"
-        @update:items="(items) => (incomes = items)"
+    <KColumn :title="$t('data')">
+      <ContributionSection
+        :items="contributions"
+        @add="newContributionModal.open"
+        @edit="(idx) => openEditModal('contribution', idx, contributions[idx].label)"
+        @delete="(idx) => openDeleteConfirmModal('contribution', idx)"
+        @update:items="(items) => (contributions = items)"
       />
       <ExpenseSection
         :items="expenses"
@@ -17,14 +17,19 @@
       />
       <div class="main-buttons">
         <div class="gradient-shadow">
-          <KButton text="Oblicz" icon="refresh-cw" icon-color="ffffff" @click="onCalculate" />
+          <KButton
+            :text="$t('calculate')"
+            icon="refresh-cw"
+            icon-color="ffffff"
+            @click="onCalculate"
+          />
         </div>
-        <KButton text="Zapisz" icon="save" icon-color="ffffff" @click="saveData" />
+        <KButton :text="$t('save')" icon="save" icon-color="ffffff" @click="saveData" />
       </div>
     </KColumn>
-    <KColumn title="Podsumowanie">
+    <KColumn :title="$t('summary')">
       <SummarySection
-        :total-income="totalIncome"
+        :total-contribution="totalContribution"
         :total-expense="totalExpense"
         :percent-shares="percentShares"
         :to-pay="toPay"
@@ -38,9 +43,10 @@
 import { ref, onMounted } from 'vue'
 import { ModalsContainer } from 'vue-final-modal'
 import { useToast } from 'vue-toastification'
+import { useI18n } from 'vue-i18n'
 import KButton from './components/KButton.vue'
 import KColumn from './components/KColumn.vue'
-import IncomeSection from './components/finance/IncomeSection.vue'
+import ContributionSection from './components/finance/ContributionSection.vue'
 import ExpenseSection from './components/finance/ExpenseSection.vue'
 import SummarySection from './components/finance/SummarySection.vue'
 import { useFinanceStorage } from './composables/useFinanceStorage'
@@ -48,16 +54,17 @@ import { useFinanceCalculations } from './composables/useFinanceCalculations'
 import { useFinanceModals } from './composables/useFinanceModals'
 import type { FinanceItem } from './types/finance'
 
-const { incomes, expenses, saveData, loadData } = useFinanceStorage()
+const { t } = useI18n()
+const { contributions, expenses, saveData, loadData } = useFinanceStorage()
 
 const percentShares = ref<FinanceItem[]>([])
 const toPay = ref<FinanceItem[]>([])
 
-const { totalIncome, totalExpense, calculatePercentShares, calculateToPay } =
-  useFinanceCalculations(incomes, expenses)
+const { totalContribution, totalExpense, calculatePercentShares, calculateToPay } =
+  useFinanceCalculations(contributions, expenses)
 
-const handleIncomeAdd = (name: string, amount: string) => {
-  incomes.value.push({ label: name, value: amount })
+const handleContributionAdd = (name: string, amount: string) => {
+  contributions.value.push({ label: name, value: amount })
   percentShares.value.push({ label: name, value: '' })
   toPay.value.push({ label: name, value: '' })
 }
@@ -66,9 +73,9 @@ const handleExpenseAdd = (name: string, amount: string) => {
   expenses.value.push({ label: name, value: amount })
 }
 
-const handleEdit = (type: 'income' | 'expense', index: number, newLabel: string) => {
-  if (type === 'income' && index < incomes.value.length) {
-    incomes.value[index].label = newLabel
+const handleEdit = (type: 'contribution' | 'expense', index: number, newLabel: string) => {
+  if (type === 'contribution' && index < contributions.value.length) {
+    contributions.value[index].label = newLabel
     if (index < percentShares.value.length) {
       percentShares.value[index].label = newLabel
     }
@@ -80,9 +87,9 @@ const handleEdit = (type: 'income' | 'expense', index: number, newLabel: string)
   }
 }
 
-const handleDelete = (type: 'income' | 'expense', index: number) => {
-  if (type === 'income' && index < incomes.value.length) {
-    incomes.value.splice(index, 1)
+const handleDelete = (type: 'contribution' | 'expense', index: number) => {
+  if (type === 'contribution' && index < contributions.value.length) {
+    contributions.value.splice(index, 1)
     if (index < percentShares.value.length) {
       percentShares.value.splice(index, 1)
     }
@@ -94,25 +101,21 @@ const handleDelete = (type: 'income' | 'expense', index: number) => {
   }
 }
 
-const { newIncomeModal, newExpenseModal, openEditModal, openDeleteConfirmModal } = useFinanceModals(
-  handleIncomeAdd,
-  handleExpenseAdd,
-  handleEdit,
-  handleDelete,
-)
+const { newContributionModal, newExpenseModal, openEditModal, openDeleteConfirmModal } =
+  useFinanceModals(handleContributionAdd, handleExpenseAdd, handleEdit, handleDelete)
 
 const toast = useToast()
 
 const onCalculate = () => {
   percentShares.value = calculatePercentShares()
   toPay.value = calculateToPay()
-  toast.success('Obliczanie zakończone sukcesem')
+  toast.success(t('calculationSuccess'))
 }
 
 onMounted(() => {
   loadData()
-  percentShares.value = incomes.value.map((i) => ({ label: i.label, value: '' }))
-  toPay.value = incomes.value.map((i) => ({ label: i.label, value: '' }))
+  percentShares.value = contributions.value.map((i) => ({ label: i.label, value: '' }))
+  toPay.value = contributions.value.map((i) => ({ label: i.label, value: '' }))
 })
 </script>
 

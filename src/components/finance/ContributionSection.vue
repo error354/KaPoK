@@ -1,13 +1,13 @@
 <template>
-  <section aria-labelledby="income-section-title">
-    <h4 id="income-section-title">
-      Wkład
+  <section aria-labelledby="contribution-section-title">
+    <h4 id="contribution-section-title">
+      {{ $t('contribution') }}
       <KButton
         size="small"
         outlined
-        text="Dodaj"
+        :text="$t('addContribution')"
         @click="onAddClick"
-        aria-label="Dodaj nowy wkład"
+        :aria-label="$t('addContribution')"
       />
     </h4>
     <div
@@ -15,13 +15,13 @@
       :key="idx"
       class="input-row"
       role="listitem"
-      :aria-label="`Wkład: ${item.label}`"
+      :aria-label="$t('contribution') + ': ' + item.label"
     >
       <KInput
         :label="item.label"
         v-model="item.value"
         type="number"
-        :aria-label="`Wartość wkładu: ${item.label}`"
+        :aria-label="$t('amount') + ': ' + item.label"
         @update:model-value="(val) => onValueUpdate(idx, val)"
       >
         <template #buttons>
@@ -31,7 +31,7 @@
             icon="edit"
             icon-size="18"
             @click="onEditClick(idx)"
-            :aria-label="`Edytuj wkład: ${item.label}`"
+            :aria-label="$t('edit') + ': ' + item.label"
           />
           <KButton
             size="small"
@@ -39,7 +39,7 @@
             icon="trash-2"
             icon-size="18"
             @click="onDeleteClick(idx)"
-            :aria-label="`Usuń wkład: ${item.label}`"
+            :aria-label="$t('delete') + ': ' + item.label"
           />
         </template>
       </KInput>
@@ -48,9 +48,12 @@
 </template>
 
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n'
 import KButton from '../KButton.vue'
 import KInput from '../KInput.vue'
 import type { FinanceItem } from '../../types/finance'
+
+useI18n()
 
 const props = defineProps<{
   items: FinanceItem[]

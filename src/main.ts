@@ -5,12 +5,14 @@ import './assets/main.css'
 
 import { createVfm } from 'vue-final-modal'
 import { createApp } from 'vue'
+import { i18n } from './i18n'
 import Toast from 'vue-toastification'
 import App from './App.vue'
 
 const vfm = createVfm()
 const app = createApp(App)
 
+app.use(i18n)
 app.use(vfm)
 app.use(Toast, {
   position: 'top-right',

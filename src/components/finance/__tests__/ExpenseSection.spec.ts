@@ -15,7 +15,7 @@ describe('ExpenseSection', () => {
         items: [],
       },
     })
-    expect(wrapper.find('h4').text()).toContain('Wydatki')
+    expect(wrapper.find('h4').text()).toContain('Expense')
   })
 
   it('#A2 renders add button', () => {
@@ -24,7 +24,7 @@ describe('ExpenseSection', () => {
         items: [],
       },
     })
-    expect(wrapper.find('button').text()).toBe('Dodaj')
+    expect(wrapper.find('button').text()).toBe('Add')
   })
 
   it('#A3 renders list of expense items', () => {
