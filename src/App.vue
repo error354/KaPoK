@@ -421,7 +421,7 @@ section {
     filter: blur(0px);
   }
   20% {
-    filter: blur(10px);
+    filter: blur(12px);
   }
   100% {
     filter: blur(6px);
