@@ -12,8 +12,14 @@
         @update:model-value="(val) => onValueUpdate(idx, val)"
       >
         <template #buttons>
-          <KButton size="small" outlined icon="edit" @click="onEditClick(idx)" />
-          <KButton size="small" outlined icon="trash-2" @click="onDeleteClick(idx)" />
+          <KButton size="small" outlined icon="edit" icon-size="18" @click="onEditClick(idx)" />
+          <KButton
+            size="small"
+            outlined
+            icon="trash-2"
+            icon-size="18"
+            @click="onDeleteClick(idx)"
+          />
         </template>
       </KInput>
     </div>
