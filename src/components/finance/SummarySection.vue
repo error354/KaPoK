@@ -41,7 +41,6 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps } from 'vue'
 import KInput from '../KInput.vue'
 import type { FinanceItem } from '../../types/finance'
 

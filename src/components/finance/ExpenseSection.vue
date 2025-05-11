@@ -48,7 +48,6 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits } from 'vue'
 import KButton from '../KButton.vue'
 import KInput from '../KInput.vue'
 import type { FinanceItem } from '../../types/finance'
