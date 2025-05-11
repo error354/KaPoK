@@ -9,24 +9,16 @@ interface AppInstance {
   toPay: { label: string; value: string }[]
   totalIncome: string
   totalExpense: string
-  incomeModalBodyRef: { submit: () => { name: string; amount: string } }
-  expenseModalBodyRef: { submit: () => { name: string; amount: string } }
-  editType: 'income' | 'expense' | null
-  editIdx: number | null
-  editLabel: string
-  handleIncomeModalSubmit: () => void
-  handleExpenseModalSubmit: () => void
-  handleEditSubmit: (newLabel: string) => void
+  handleIncomeAdd: (name: string, amount: string) => void
+  handleExpenseAdd: (name: string, amount: string) => void
+  handleEdit: (type: 'income' | 'expense', index: number, newLabel: string) => void
+  handleDelete: (type: 'income' | 'expense', index: number) => void
   saveData: () => void
   onCalculate: () => void
-  deleteIncome: (idx: number) => void
-  deleteExpense: (idx: number) => void
   newIncomeModal: { open: () => Promise<void> }
   newExpenseModal: { open: () => Promise<void> }
-  editModal: { open: () => Promise<void> }
-  isIncomeModalValid: boolean
-  isExpenseModalValid: boolean
-  isEditModalValid: boolean
+  openEditModal: (type: 'income' | 'expense', idx: number, currentLabel: string) => void
+  openDeleteConfirmModal: (type: 'income' | 'expense', idx: number) => void
 }
 
 // Mock vue-toastification
@@ -172,11 +164,7 @@ describe('App', () => {
       const vm = wrapper.vm as unknown as AppInstance
       const initialLength = vm.incomes.length
 
-      vm.incomeModalBodyRef = {
-        submit: () => ({ name: 'New Income', amount: '100' }),
-      }
-
-      await vm.handleIncomeModalSubmit()
+      vm.handleIncomeAdd('New Income', '100')
 
       expect(vm.incomes.length).toBe(initialLength + 1)
       expect(vm.incomes[initialLength]).toEqual({
@@ -190,11 +178,7 @@ describe('App', () => {
       const vm = wrapper.vm as unknown as AppInstance
       const initialLength = vm.expenses.length
 
-      vm.expenseModalBodyRef = {
-        submit: () => ({ name: 'New Expense', amount: '50' }),
-      }
-
-      await vm.handleExpenseModalSubmit()
+      vm.handleExpenseAdd('New Expense', '50')
 
       expect(vm.expenses.length).toBe(initialLength + 1)
       expect(vm.expenses[initialLength]).toEqual({
@@ -211,11 +195,7 @@ describe('App', () => {
       vm.percentShares = [{ label: 'Old Label', value: '' }]
       vm.toPay = [{ label: 'Old Label', value: '' }]
 
-      vm.editType = 'income'
-      vm.editIdx = 0
-      vm.editLabel = 'New Label'
-
-      await vm.handleEditSubmit('New Label')
+      vm.handleEdit('income', 0, 'New Label')
 
       expect(vm.incomes[0].label).toBe('New Label')
       expect(vm.percentShares[0].label).toBe('New Label')
@@ -230,7 +210,7 @@ describe('App', () => {
       vm.percentShares = [{ label: 'Test Income', value: '' }]
       vm.toPay = [{ label: 'Test Income', value: '' }]
 
-      await vm.deleteIncome(0)
+      vm.handleDelete('income', 0)
 
       expect(vm.incomes.length).toBe(0)
       expect(vm.percentShares.length).toBe(0)
@@ -243,7 +223,7 @@ describe('App', () => {
 
       vm.expenses = [{ label: 'Test Expense', value: '50' }]
 
-      await vm.deleteExpense(0)
+      vm.handleDelete('expense', 0)
 
       expect(vm.expenses.length).toBe(0)
     })

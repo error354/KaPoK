@@ -4,14 +4,14 @@
       <IncomeSection
         :items="incomes"
         @add="newIncomeModal.open"
-        @edit="(idx) => openEditModal('income', idx)"
+        @edit="(idx) => openEditModal('income', idx, incomes[idx].label)"
         @delete="(idx) => openDeleteConfirmModal('income', idx)"
         @update:items="(items) => (incomes = items)"
       />
       <ExpenseSection
         :items="expenses"
         @add="newExpenseModal.open"
-        @edit="(idx) => openEditModal('expense', idx)"
+        @edit="(idx) => openEditModal('expense', idx, expenses[idx].label)"
         @delete="(idx) => openDeleteConfirmModal('expense', idx)"
         @update:items="(items) => (expenses = items)"
       />
@@ -35,258 +35,77 @@
 </template>
 
 <script setup lang="ts">
-import { ref, h, onMounted, reactive, watch } from 'vue'
-import { ModalsContainer, useModal } from 'vue-final-modal'
+import { ref, onMounted } from 'vue'
+import { ModalsContainer } from 'vue-final-modal'
 import { useToast } from 'vue-toastification'
 import KButton from './components/KButton.vue'
 import KColumn from './components/KColumn.vue'
-import KModal from './components/modal/KModal.vue'
 import IncomeSection from './components/finance/IncomeSection.vue'
 import ExpenseSection from './components/finance/ExpenseSection.vue'
 import SummarySection from './components/finance/SummarySection.vue'
-import AddModalBody from './components/modal/AddModalBody.vue'
-import EditLabelModalBody from './components/modal/EditLabelModalBody.vue'
-import ConfirmModalBody from './components/modal/ConfirmModalBody.vue'
+import { useFinanceStorage } from './composables/useFinanceStorage'
+import { useFinanceCalculations } from './composables/useFinanceCalculations'
+import { useFinanceModals } from './composables/useFinanceModals'
+import type { FinanceItem } from './types/finance'
 
-const incomes = ref<{ label: string; value: string }[]>([])
-const percentShares = ref<{ label: string; value: string }[]>([])
-const toPay = ref<{ label: string; value: string }[]>([])
-const expenses = ref<{ label: string; value: string }[]>([])
+const { incomes, expenses, saveData, loadData } = useFinanceStorage()
 
-const editType = ref<'income' | 'expense' | null>(null)
-const editIdx = ref<number | null>(null)
-const editLabel = ref('')
+const percentShares = ref<FinanceItem[]>([])
+const toPay = ref<FinanceItem[]>([])
 
-const isIncomeModalValid = ref(false)
-const isExpenseModalValid = ref(false)
-const isEditModalValid = ref(false)
+const { totalIncome, totalExpense, calculatePercentShares, calculateToPay } =
+  useFinanceCalculations(incomes, expenses)
 
-const incomeModalBodyRef = ref<{ submit: () => { name: string; amount: string } }>({
-  submit: () => ({ name: '', amount: '' }),
-})
-const expenseModalBodyRef = ref<{ submit: () => { name: string; amount: string } }>({
-  submit: () => ({ name: '', amount: '' }),
-})
-
-const editModalContent = () => [
-  h(EditLabelModalBody, {
-    modelValue: editLabel.value,
-    'onUpdate:modelValue': (val: string) => (editLabel.value = val),
-    'onUpdate:isValid': (val: boolean) => (isEditModalValid.value = val),
-  }),
-]
-
-const editModalAttrs = reactive({
-  title: 'Edytuj nazwę',
-  modelValue: false,
-  onSubmit: () => handleEditSubmit(editLabel.value),
-  disabled: false,
-})
-
-watch(isEditModalValid, (val) => {
-  editModalAttrs.disabled = !val
-})
-
-const editModal = useModal({
-  component: KModal,
-  attrs: editModalAttrs,
-  slots: {
-    default: editModalContent,
-  },
-})
-
-const openEditModal = (type: 'income' | 'expense', idx: number) => {
-  editType.value = type
-  editIdx.value = idx
-  editLabel.value = (type === 'income' ? incomes.value[idx].label : expenses.value[idx].label) || ''
-  editModal.open()
+const handleIncomeAdd = (name: string, amount: string) => {
+  incomes.value.push({ label: name, value: amount })
+  percentShares.value.push({ label: name, value: '' })
+  toPay.value.push({ label: name, value: '' })
 }
 
-const handleEditSubmit = (newLabel: string) => {
-  if (editType.value && editIdx.value !== null && newLabel) {
-    if (editType.value === 'income') {
-      incomes.value[editIdx.value].label = newLabel
-      percentShares.value[editIdx.value].label = newLabel
-      toPay.value[editIdx.value].label = newLabel
-    } else {
-      expenses.value[editIdx.value].label = newLabel
-    }
+const handleExpenseAdd = (name: string, amount: string) => {
+  expenses.value.push({ label: name, value: amount })
+}
+
+const handleEdit = (type: 'income' | 'expense', index: number, newLabel: string) => {
+  if (type === 'income') {
+    incomes.value[index].label = newLabel
+    percentShares.value[index].label = newLabel
+    toPay.value[index].label = newLabel
+  } else {
+    expenses.value[index].label = newLabel
   }
 }
 
-const handleIncomeModalSubmit = () => {
-  const { name, amount } = incomeModalBodyRef.value.submit()
-  if (name && amount) {
-    incomes.value.push({ label: name, value: amount })
-    percentShares.value.push({ label: name, value: '' })
-    toPay.value.push({ label: name, value: '' })
+const handleDelete = (type: 'income' | 'expense', index: number) => {
+  if (type === 'income') {
+    incomes.value.splice(index, 1)
+    percentShares.value.splice(index, 1)
+    toPay.value.splice(index, 1)
+  } else {
+    expenses.value.splice(index, 1)
   }
 }
 
-const handleExpenseModalSubmit = () => {
-  const { name, amount } = expenseModalBodyRef.value.submit()
-  if (name && amount) {
-    expenses.value.push({ label: name, value: amount })
-  }
-}
-
-const incomeModalContent = () => [
-  h(AddModalBody, {
-    ref: incomeModalBodyRef,
-    nameLabel: 'Nazwa wkładu',
-    amountLabel: 'Kwota wkładu',
-    'onUpdate:isValid': (val: boolean) => (isIncomeModalValid.value = val),
-  }),
-]
-
-const expenseModalContent = () => [
-  h(AddModalBody, {
-    ref: expenseModalBodyRef,
-    nameLabel: 'Nazwa wydatku',
-    amountLabel: 'Kwota wydatku',
-    'onUpdate:isValid': (val: boolean) => (isExpenseModalValid.value = val),
-  }),
-]
-
-const incomeModalAttrs = reactive({
-  title: 'Dodaj nowy wkład',
-  modelValue: false,
-  onSubmit: handleIncomeModalSubmit,
-  disabled: true,
-})
-
-const expenseModalAttrs = reactive({
-  title: 'Dodaj nowy wydatek',
-  modelValue: false,
-  onSubmit: handleExpenseModalSubmit,
-  disabled: true,
-})
-
-watch(isIncomeModalValid, (val) => {
-  incomeModalAttrs.disabled = !val
-})
-
-watch(isExpenseModalValid, (val) => {
-  expenseModalAttrs.disabled = !val
-})
-
-const newIncomeModal = useModal({
-  component: KModal,
-  attrs: incomeModalAttrs,
-  slots: {
-    default: incomeModalContent,
-  },
-})
-
-const newExpenseModal = useModal({
-  component: KModal,
-  attrs: expenseModalAttrs,
-  slots: {
-    default: expenseModalContent,
-  },
-})
-
-const confirmModal = useModal({
-  component: KModal,
-  attrs: {
-    title: 'Potwierdź usunięcie',
-    modelValue: false,
-    confirmText: 'Tak',
-    cancelText: 'Nie',
-    disabled: false,
-    onSubmit: () => {
-      if (deleteType.value === 'income' && deleteIdx.value !== null) {
-        deleteIncome(deleteIdx.value)
-      } else if (deleteType.value === 'expense' && deleteIdx.value !== null) {
-        deleteExpense(deleteIdx.value)
-      }
-    },
-  },
-  slots: {
-    default: () => [
-      h(ConfirmModalBody, {
-        message:
-          deleteType.value === 'income'
-            ? 'Czy na pewno chcesz usunąć ten wkład?'
-            : 'Czy na pewno chcesz usunąć ten wydatek?',
-      }),
-    ],
-  },
-})
-
-const deleteType = ref<'income' | 'expense' | null>(null)
-const deleteIdx = ref<number | null>(null)
-
-const openDeleteConfirmModal = (type: 'income' | 'expense', idx: number) => {
-  deleteType.value = type
-  deleteIdx.value = idx
-  confirmModal.open()
-}
-
-const deleteIncome = (idx: number) => {
-  incomes.value.splice(idx, 1)
-  percentShares.value.splice(idx, 1)
-  toPay.value.splice(idx, 1)
-}
-
-const deleteExpense = (idx: number) => {
-  expenses.value.splice(idx, 1)
-}
-
-const INCOMES_KEY = 'incomes'
-const EXPENSES_KEY = 'expenses'
+const { newIncomeModal, newExpenseModal, openEditModal, openDeleteConfirmModal } = useFinanceModals(
+  handleIncomeAdd,
+  handleExpenseAdd,
+  handleEdit,
+  handleDelete,
+)
 
 const toast = useToast()
 
-const saveData = () => {
-  localStorage.setItem(INCOMES_KEY, JSON.stringify(incomes.value))
-  localStorage.setItem(EXPENSES_KEY, JSON.stringify(expenses.value))
-  toast.success('Dane zostały zapisane')
-}
-
-const loadData = () => {
-  const savedIncomes = localStorage.getItem(INCOMES_KEY)
-  const savedExpenses = localStorage.getItem(EXPENSES_KEY)
-
-  incomes.value = savedIncomes ? JSON.parse(savedIncomes) : []
-  percentShares.value = incomes.value.map((i) => ({ label: i.label, value: '' }))
-  toPay.value = incomes.value.map((i) => ({ label: i.label, value: '' }))
-
-  expenses.value = savedExpenses ? JSON.parse(savedExpenses) : []
-}
-
-const totalIncome = ref('')
-const totalExpense = ref('')
-
 const onCalculate = () => {
-  const sumIncome = incomes.value.reduce((sum, item) => sum + parseFloat(item.value || '0'), 0)
-  const sumExpense = expenses.value.reduce((sum, item) => sum + parseFloat(item.value || '0'), 0)
-  totalIncome.value = sumIncome.toFixed(2)
-  totalExpense.value = sumExpense.toFixed(2)
-
-  percentShares.value = incomes.value.map((item) => {
-    const val = parseFloat(item.value || '0')
-    const percent = sumIncome > 0 ? (val / sumIncome) * 100 : 0
-    return {
-      label: item.label,
-      value: `${percent.toFixed(2)} %`,
-    }
-  })
-
-  toPay.value = incomes.value.map((item) => {
-    const val = parseFloat(item.value || '0')
-    const percent = sumIncome > 0 ? (val / sumIncome) * 100 : 0
-    const pay = (sumExpense * percent) / 100
-    return {
-      label: item.label,
-      value: pay.toFixed(2),
-    }
-  })
-
+  percentShares.value = calculatePercentShares()
+  toPay.value = calculateToPay()
   toast.success('Obliczanie zakończone sukcesem')
 }
 
-onMounted(loadData)
+onMounted(() => {
+  loadData()
+  percentShares.value = incomes.value.map((i) => ({ label: i.label, value: '' }))
+  toPay.value = incomes.value.map((i) => ({ label: i.label, value: '' }))
+})
 </script>
 
 <style scoped>
