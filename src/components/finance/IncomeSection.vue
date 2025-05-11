@@ -1,24 +1,45 @@
 <template>
-  <section>
-    <h4>
+  <section aria-labelledby="income-section-title">
+    <h4 id="income-section-title">
       Wkład
-      <KButton size="small" outlined text="Dodaj" @click="onAddClick" />
+      <KButton
+        size="small"
+        outlined
+        text="Dodaj"
+        @click="onAddClick"
+        aria-label="Dodaj nowy wkład"
+      />
     </h4>
-    <div v-for="(item, idx) in items" :key="idx" class="input-row">
+    <div
+      v-for="(item, idx) in items"
+      :key="idx"
+      class="input-row"
+      role="listitem"
+      :aria-label="`Wkład: ${item.label}`"
+    >
       <KInput
         :label="item.label"
         v-model="item.value"
         type="number"
+        :aria-label="`Wartość wkładu: ${item.label}`"
         @update:model-value="(val) => onValueUpdate(idx, val)"
       >
         <template #buttons>
-          <KButton size="small" outlined icon="edit" icon-size="18" @click="onEditClick(idx)" />
+          <KButton
+            size="small"
+            outlined
+            icon="edit"
+            icon-size="18"
+            @click="onEditClick(idx)"
+            :aria-label="`Edytuj wkład: ${item.label}`"
+          />
           <KButton
             size="small"
             outlined
             icon="trash-2"
             icon-size="18"
             @click="onDeleteClick(idx)"
+            :aria-label="`Usuń wkład: ${item.label}`"
           />
         </template>
       </KInput>
