@@ -9,7 +9,7 @@
     content-transition="vfm-slide-up"
     @opened="onModalOpened"
   >
-    <div class="modal-wrapper" ref="modalContent">
+    <div class="modal-wrapper" ref="modalContent" @keydown.enter="submit">
       <div class="modal-header">
         <h4>{{ title }}</h4>
       </div>
