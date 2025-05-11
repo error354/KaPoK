@@ -52,8 +52,17 @@ span {
   line-height: 1.2;
 }
 
-button {
+button,
+button:hover,
+button:focus,
+button:active {
   transition: var(--transition);
+  outline: none !important;
+}
+
+button:focus {
+  outline: none;
+  box-shadow: 0 0 1px var(--outilned-focus-color) !important;
 }
 
 button.outlined {
@@ -66,13 +75,9 @@ button.outlined:hover {
   border: 1px solid var(--color-primary) !important;
 }
 
-button.outlined:focus-visible {
+button.outlined:focus {
   border: 1px solid var(--color-primary) !important;
   box-shadow: 0 0 0 1px var(--outilned-focus-color);
-}
-
-button:focus-visible {
-  outline: none;
 }
 
 .small-button {

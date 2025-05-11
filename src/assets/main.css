@@ -31,18 +31,6 @@ hr {
   background-color: var(--color-lightGrey);
 }
 
-button,
-button:hover,
-button:focus,
-button:active {
-  transition: var(--transition);
-  outline: none !important;
-}
-
-button:focus {
-  box-shadow: 0 0 1px var(--outilned-focus-color) !important;
-}
-
 .container {
   margin: 0 auto;
   padding: 48px 12px;
