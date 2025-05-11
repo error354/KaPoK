@@ -435,7 +435,6 @@ section {
   left: var(--gradient-size);
   right: var(--gradient-size);
   bottom: var(--gradient-size);
-  /* background: linear-gradient(45deg, #b3ff00, #00ff00, #039aff); */
   background: linear-gradient(45deg, #954ba5, #65b5eb);
   background-size: 200% 200%;
   border-radius: 8px;
