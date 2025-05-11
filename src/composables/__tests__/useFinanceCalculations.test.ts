@@ -8,7 +8,16 @@ describe('useFinanceCalculations', () => {
     return items.map((item) => ({ label: item.label, value: item.value }))
   }
 
-  it('#A1 calculates total contribution correctly', () => {
+  it('#A1 initializes with empty totals', () => {
+    const contributions = ref<FinanceItem[]>([])
+    const expenses = ref<FinanceItem[]>([])
+
+    const { totalContribution, totalExpense } = useFinanceCalculations(contributions, expenses)
+    expect(totalContribution.value).toBe('')
+    expect(totalExpense.value).toBe('')
+  })
+
+  it('#A2 calculates total contribution correctly', () => {
     const contributions = ref<FinanceItem[]>(
       createMockItems([
         { label: 'Contribution 1', value: '100' },
@@ -23,7 +32,7 @@ describe('useFinanceCalculations', () => {
     expect(totalContribution.value).toBe('600.00')
   })
 
-  it('#A2 calculates total expense correctly', () => {
+  it('#A3 calculates total expense correctly', () => {
     const contributions = ref<FinanceItem[]>([])
     const expenses = ref<FinanceItem[]>(
       createMockItems([
@@ -38,7 +47,7 @@ describe('useFinanceCalculations', () => {
     expect(totalExpense.value).toBe('150.00')
   })
 
-  it('#A3 handles invalid number values', () => {
+  it('#A4 handles invalid number values', () => {
     const contributions = ref<FinanceItem[]>(
       createMockItems([
         { label: 'Contribution 1', value: '100' },
@@ -53,7 +62,7 @@ describe('useFinanceCalculations', () => {
     expect(totalContribution.value).toBe('100.00')
   })
 
-  it('#A4 calculates percent shares correctly', () => {
+  it('#A5 calculates percent shares correctly', () => {
     const contributions = ref<FinanceItem[]>(
       createMockItems([
         { label: 'Contribution 1', value: '100' },
@@ -77,7 +86,7 @@ describe('useFinanceCalculations', () => {
     ])
   })
 
-  it('#A5 calculates to pay amounts correctly', () => {
+  it('#A6 calculates to pay amounts correctly', () => {
     const contributions = ref<FinanceItem[]>(
       createMockItems([
         { label: 'Contribution 1', value: '100' },
@@ -103,7 +112,7 @@ describe('useFinanceCalculations', () => {
     ])
   })
 
-  it('#A6 handles zero total contribution in percent shares', () => {
+  it('#A7 handles zero total contribution in percent shares', () => {
     const contributions = ref<FinanceItem[]>(
       createMockItems([
         { label: 'Contribution 1', value: '0' },
@@ -125,7 +134,7 @@ describe('useFinanceCalculations', () => {
     ])
   })
 
-  it('#A7 handles zero total contribution in to pay calculations', () => {
+  it('#A8 handles zero total contribution in to pay calculations', () => {
     const contributions = ref<FinanceItem[]>(
       createMockItems([
         { label: 'Contribution 1', value: '0' },
@@ -144,7 +153,7 @@ describe('useFinanceCalculations', () => {
     ])
   })
 
-  it('#A8 handles negative contribution values', () => {
+  it('#A9 handles negative contribution values', () => {
     const contributions = ref<FinanceItem[]>(
       createMockItems([
         { label: 'Contribution 1', value: '-100' },
@@ -158,7 +167,7 @@ describe('useFinanceCalculations', () => {
     expect(totalContribution.value).toBe('100.00')
   })
 
-  it('#A9 handles negative expense values', () => {
+  it('#A10 handles negative expense values', () => {
     const contributions = ref<FinanceItem[]>([])
     const expenses = ref<FinanceItem[]>(
       createMockItems([
@@ -172,7 +181,7 @@ describe('useFinanceCalculations', () => {
     expect(totalExpense.value).toBe('25.00')
   })
 
-  it('#A10 calculates percent shares with negative values', () => {
+  it('#A11 calculates percent shares with negative values', () => {
     const contributions = ref<FinanceItem[]>(
       createMockItems([
         { label: 'Contribution 1', value: '-100' },
@@ -194,7 +203,7 @@ describe('useFinanceCalculations', () => {
     ])
   })
 
-  it('#A11 calculates to pay amounts with negative values', () => {
+  it('#A12 calculates to pay amounts with negative values', () => {
     const contributions = ref<FinanceItem[]>(
       createMockItems([
         { label: 'Contribution 1', value: '-100' },
@@ -213,7 +222,7 @@ describe('useFinanceCalculations', () => {
     ])
   })
 
-  it('#A12 handles all negative values', () => {
+  it('#A13 handles all negative values', () => {
     const contributions = ref<FinanceItem[]>(
       createMockItems([
         { label: 'Contribution 1', value: '-100' },

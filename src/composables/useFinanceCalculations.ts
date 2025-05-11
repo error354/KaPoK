@@ -5,8 +5,8 @@ export const useFinanceCalculations = (
   contributions: Ref<FinanceItem[]>,
   expenses: Ref<FinanceItem[]>,
 ) => {
-  const totalContribution = ref('0.00')
-  const totalExpense = ref('0.00')
+  const totalContribution = ref('')
+  const totalExpense = ref('')
 
   const calculateTotals = () => {
     totalContribution.value = contributions.value
