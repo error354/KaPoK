@@ -41,7 +41,9 @@ export const useFinanceModals = (
   ]
 
   const editModalAttrs = reactive({
-    title: t('editName'),
+    get title() {
+      return t('editName')
+    },
     modelValue: false,
     onSubmit: () => {
       if (editType.value && editIdx.value !== null && editLabel.value) {
@@ -74,7 +76,9 @@ export const useFinanceModals = (
   ]
 
   const contributionModalAttrs = reactive({
-    title: t('addContribution'),
+    get title() {
+      return t('addContribution')
+    },
     modelValue: false,
     onSubmit: () => {
       const { name, amount } = contributionModalBodyRef.value.submit()
@@ -108,7 +112,9 @@ export const useFinanceModals = (
   ]
 
   const expenseModalAttrs = reactive({
-    title: t('addExpense'),
+    get title() {
+      return t('addExpense')
+    },
     modelValue: false,
     onSubmit: () => {
       const { name, amount } = expenseModalBodyRef.value.submit()
@@ -132,20 +138,28 @@ export const useFinanceModals = (
   })
 
   // Delete Modal
+  const confirmModalAttrs = reactive({
+    get title() {
+      return t('confirmDelete')
+    },
+    get confirmText() {
+      return t('yes')
+    },
+    get cancelText() {
+      return t('no')
+    },
+    modelValue: false,
+    disabled: false,
+    onSubmit: () => {
+      if (deleteType.value && deleteIdx.value !== null) {
+        onDelete(deleteType.value, deleteIdx.value)
+      }
+    },
+  })
+
   const confirmModal = useModal({
     component: KModal,
-    attrs: {
-      title: t('confirmDelete'),
-      modelValue: false,
-      confirmText: t('yes'),
-      cancelText: t('no'),
-      disabled: false,
-      onSubmit: () => {
-        if (deleteType.value && deleteIdx.value !== null) {
-          onDelete(deleteType.value, deleteIdx.value)
-        }
-      },
-    },
+    attrs: confirmModalAttrs,
     slots: {
       default: () => [
         h(ConfirmModalBody, {

@@ -8,7 +8,7 @@ describe('useFinanceCalculations', () => {
     return items.map((item) => ({ label: item.label, value: item.value }))
   }
 
-  it('#A1 calculates total contribution  correctly', () => {
+  it('#A1 calculates total contribution correctly', () => {
     const contributions = ref<FinanceItem[]>(
       createMockItems([
         { label: 'Contribution 1', value: '100' },
@@ -18,7 +18,8 @@ describe('useFinanceCalculations', () => {
     )
     const expenses = ref<FinanceItem[]>([])
 
-    const { totalContribution } = useFinanceCalculations(contributions, expenses)
+    const { totalContribution, calculateTotals } = useFinanceCalculations(contributions, expenses)
+    calculateTotals()
     expect(totalContribution.value).toBe('600.00')
   })
 
@@ -32,7 +33,8 @@ describe('useFinanceCalculations', () => {
       ]),
     )
 
-    const { totalExpense } = useFinanceCalculations(contributions, expenses)
+    const { totalExpense, calculateTotals } = useFinanceCalculations(contributions, expenses)
+    calculateTotals()
     expect(totalExpense.value).toBe('150.00')
   })
 
@@ -46,7 +48,8 @@ describe('useFinanceCalculations', () => {
     )
     const expenses = ref<FinanceItem[]>([])
 
-    const { totalContribution } = useFinanceCalculations(contributions, expenses)
+    const { totalContribution, calculateTotals } = useFinanceCalculations(contributions, expenses)
+    calculateTotals()
     expect(totalContribution.value).toBe('100.00')
   })
 
@@ -60,7 +63,11 @@ describe('useFinanceCalculations', () => {
     )
     const expenses = ref<FinanceItem[]>([])
 
-    const { calculatePercentShares } = useFinanceCalculations(contributions, expenses)
+    const { calculateTotals, calculatePercentShares } = useFinanceCalculations(
+      contributions,
+      expenses,
+    )
+    calculateTotals()
     const shares = calculatePercentShares()
 
     expect(shares).toEqual([
@@ -85,7 +92,8 @@ describe('useFinanceCalculations', () => {
       ]),
     )
 
-    const { calculateToPay } = useFinanceCalculations(contributions, expenses)
+    const { calculateTotals, calculateToPay } = useFinanceCalculations(contributions, expenses)
+    calculateTotals()
     const toPay = calculateToPay()
 
     expect(toPay).toEqual([
@@ -104,7 +112,11 @@ describe('useFinanceCalculations', () => {
     )
     const expenses = ref<FinanceItem[]>([])
 
-    const { calculatePercentShares } = useFinanceCalculations(contributions, expenses)
+    const { calculateTotals, calculatePercentShares } = useFinanceCalculations(
+      contributions,
+      expenses,
+    )
+    calculateTotals()
     const shares = calculatePercentShares()
 
     expect(shares).toEqual([
@@ -122,7 +134,8 @@ describe('useFinanceCalculations', () => {
     )
     const expenses = ref<FinanceItem[]>(createMockItems([{ label: 'Expense 1', value: '100' }]))
 
-    const { calculateToPay } = useFinanceCalculations(contributions, expenses)
+    const { calculateTotals, calculateToPay } = useFinanceCalculations(contributions, expenses)
+    calculateTotals()
     const toPay = calculateToPay()
 
     expect(toPay).toEqual([
@@ -140,7 +153,8 @@ describe('useFinanceCalculations', () => {
     )
     const expenses = ref<FinanceItem[]>([])
 
-    const { totalContribution } = useFinanceCalculations(contributions, expenses)
+    const { totalContribution, calculateTotals } = useFinanceCalculations(contributions, expenses)
+    calculateTotals()
     expect(totalContribution.value).toBe('100.00')
   })
 
@@ -153,7 +167,8 @@ describe('useFinanceCalculations', () => {
       ]),
     )
 
-    const { totalExpense } = useFinanceCalculations(contributions, expenses)
+    const { totalExpense, calculateTotals } = useFinanceCalculations(contributions, expenses)
+    calculateTotals()
     expect(totalExpense.value).toBe('25.00')
   })
 
@@ -166,7 +181,11 @@ describe('useFinanceCalculations', () => {
     )
     const expenses = ref<FinanceItem[]>([])
 
-    const { calculatePercentShares } = useFinanceCalculations(contributions, expenses)
+    const { calculateTotals, calculatePercentShares } = useFinanceCalculations(
+      contributions,
+      expenses,
+    )
+    calculateTotals()
     const shares = calculatePercentShares()
 
     expect(shares).toEqual([
@@ -184,7 +203,8 @@ describe('useFinanceCalculations', () => {
     )
     const expenses = ref<FinanceItem[]>(createMockItems([{ label: 'Expense 1', value: '200' }]))
 
-    const { calculateToPay } = useFinanceCalculations(contributions, expenses)
+    const { calculateTotals, calculateToPay } = useFinanceCalculations(contributions, expenses)
+    calculateTotals()
     const toPay = calculateToPay()
 
     expect(toPay).toEqual([
@@ -207,9 +227,15 @@ describe('useFinanceCalculations', () => {
       ]),
     )
 
-    const { totalContribution, totalExpense, calculatePercentShares, calculateToPay } =
-      useFinanceCalculations(contributions, expenses)
+    const {
+      totalContribution,
+      totalExpense,
+      calculateTotals,
+      calculatePercentShares,
+      calculateToPay,
+    } = useFinanceCalculations(contributions, expenses)
 
+    calculateTotals()
     expect(totalContribution.value).toBe('-300.00')
     expect(totalExpense.value).toBe('-125.00')
 

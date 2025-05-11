@@ -3,7 +3,7 @@
     <KInput
       :model-value="labelInput"
       @update:model-value="(val) => updateValue(val)"
-      label="Nowa nazwa"
+      :label="$t('newLabel')"
       autofocus
     />
   </form>
@@ -11,7 +11,10 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
+import { useI18n } from 'vue-i18n'
 import KInput from '../KInput.vue'
+
+useI18n()
 
 const props = defineProps({
   modelValue: String,

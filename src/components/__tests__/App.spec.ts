@@ -106,8 +106,15 @@ describe('App', () => {
       const wrapper = mount(App)
       const vm = wrapper.vm as unknown as AppInstance
 
-      expect(vm.contributions).toEqual([])
-      expect(vm.expenses).toEqual([])
+      expect(vm.contributions).toEqual([
+        { label: 'Person 1', value: '100' },
+        { label: 'Person 2', value: '120' },
+      ])
+      expect(vm.expenses).toEqual([
+        { label: 'Expense 1', value: '30' },
+        { label: 'Expense 2', value: '290' },
+        { label: 'Expense 3', value: '-20' },
+      ])
     })
 
     it('#A4 handles invalid JSON in localStorage', () => {
@@ -117,8 +124,15 @@ describe('App', () => {
       const wrapper = mount(App)
       const vm = wrapper.vm as unknown as AppInstance
 
-      expect(vm.contributions).toEqual([])
-      expect(vm.expenses).toEqual([])
+      expect(vm.contributions).toEqual([
+        { label: 'Person 1', value: '100' },
+        { label: 'Person 2', value: '120' },
+      ])
+      expect(vm.expenses).toEqual([
+        { label: 'Expense 1', value: '30' },
+        { label: 'Expense 2', value: '290' },
+        { label: 'Expense 3', value: '-20' },
+      ])
     })
   })
 

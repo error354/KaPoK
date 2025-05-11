@@ -19,6 +19,17 @@ describe('useFinanceStorage', () => {
     { label: 'Expense 2', value: '75' },
   ]
 
+  const exampleContributions: FinanceItem[] = [
+    { label: 'Person 1', value: '100' },
+    { label: 'Person 2', value: '120' },
+  ]
+
+  const exampleExpenses: FinanceItem[] = [
+    { label: 'Expense 1', value: '30' },
+    { label: 'Expense 2', value: '290' },
+    { label: 'Expense 3', value: '-20' },
+  ]
+
   beforeEach(() => {
     // Clear localStorage before each test
     localStorage.clear()
@@ -66,15 +77,15 @@ describe('useFinanceStorage', () => {
     const { contributions, expenses, loadData } = useFinanceStorage()
     loadData()
 
-    expect(contributions.value).toEqual([])
-    expect(expenses.value).toEqual([])
+    expect(contributions.value).toEqual(exampleContributions)
+    expect(expenses.value).toEqual(exampleExpenses)
   })
 
   it('#A5 handles empty localStorage', () => {
     const { contributions, expenses, loadData } = useFinanceStorage()
     loadData()
 
-    expect(contributions.value).toEqual([])
-    expect(expenses.value).toEqual([])
+    expect(contributions.value).toEqual(exampleContributions)
+    expect(expenses.value).toEqual(exampleExpenses)
   })
 })

@@ -1,27 +1,28 @@
-import { computed, type Ref } from 'vue'
+import { ref, type Ref } from 'vue'
 import type { FinanceItem } from '../types/finance'
 
 export const useFinanceCalculations = (
   contributions: Ref<FinanceItem[]>,
   expenses: Ref<FinanceItem[]>,
 ) => {
-  const totalContribution = computed(() => {
-    return contributions.value
-      .reduce((sum, item) => {
-        const value = parseFloat(item.value || '0')
-        return sum + (isNaN(value) ? 0 : value)
-      }, 0)
-      .toFixed(2)
-  })
+  const totalContribution = ref('0.00')
+  const totalExpense = ref('0.00')
 
-  const totalExpense = computed(() => {
-    return expenses.value
+  const calculateTotals = () => {
+    totalContribution.value = contributions.value
       .reduce((sum, item) => {
         const value = parseFloat(item.value || '0')
         return sum + (isNaN(value) ? 0 : value)
       }, 0)
       .toFixed(2)
-  })
+
+    totalExpense.value = expenses.value
+      .reduce((sum, item) => {
+        const value = parseFloat(item.value || '0')
+        return sum + (isNaN(value) ? 0 : value)
+      }, 0)
+      .toFixed(2)
+  }
 
   const calculatePercentShares = () => {
     const sumContribution = parseFloat(totalContribution.value)
@@ -52,6 +53,7 @@ export const useFinanceCalculations = (
   return {
     totalContribution,
     totalExpense,
+    calculateTotals,
     calculatePercentShares,
     calculateToPay,
   }

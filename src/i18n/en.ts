@@ -27,4 +27,6 @@ export const en = {
   no: 'No',
   confirmDeleteContribution: 'Are you sure you want to delete this contribution?',
   confirmDeleteExpense: 'Are you sure you want to delete this expense?',
+  language: 'Language',
+  newLabel: 'New name',
 }
