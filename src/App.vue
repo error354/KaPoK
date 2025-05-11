@@ -418,10 +418,10 @@ section {
 
 @keyframes gradient-flash {
   0% {
-    filter: blur(6px);
+    filter: blur(0px);
   }
-  50% {
-    filter: blur(12px);
+  20% {
+    filter: blur(10px);
   }
   100% {
     filter: blur(6px);
@@ -452,6 +452,6 @@ section {
   transition: all 0.2s ease;
   animation:
     gradient-rotate 7s linear infinite,
-    gradient-flash 0.5s ease-in;
+    gradient-flash 1s ease-in-out;
 }
 </style>
