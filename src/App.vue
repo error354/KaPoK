@@ -63,13 +63,7 @@
       </section>
       <div class="main-buttons">
         <div class="gradient-shadow">
-          <KButton
-            text="Oblicz"
-            class="calculate-button"
-            icon="refresh-cw"
-            icon-color="ffffff"
-            @click="onCalculate"
-          />
+          <KButton text="Oblicz" icon="refresh-cw" icon-color="ffffff" @click="onCalculate" />
         </div>
         <KButton text="Zapisz" icon="save" icon-color="ffffff" @click="saveData" />
       </div>
@@ -395,14 +389,13 @@ section {
   margin-left: 0;
 }
 
-.calculate-button:hover {
-  opacity: 1;
-}
-
 .gradient-shadow {
   position: relative;
   background: white;
   border-radius: 8px;
+  button {
+    opacity: 1;
+  }
 }
 
 @keyframes gradient-rotate {
@@ -453,7 +446,8 @@ section {
   animation: gradient-rotate 7s linear infinite;
 }
 
-.gradient-shadow:hover::before {
+.gradient-shadow:hover::before,
+.gradient-shadow:focus-within::before {
   opacity: 1;
   transition: all 0.2s ease;
   animation:
