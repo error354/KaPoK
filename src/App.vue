@@ -67,21 +67,29 @@ const handleExpenseAdd = (name: string, amount: string) => {
 }
 
 const handleEdit = (type: 'income' | 'expense', index: number, newLabel: string) => {
-  if (type === 'income') {
+  if (type === 'income' && index < incomes.value.length) {
     incomes.value[index].label = newLabel
-    percentShares.value[index].label = newLabel
-    toPay.value[index].label = newLabel
-  } else {
+    if (index < percentShares.value.length) {
+      percentShares.value[index].label = newLabel
+    }
+    if (index < toPay.value.length) {
+      toPay.value[index].label = newLabel
+    }
+  } else if (type === 'expense' && index < expenses.value.length) {
     expenses.value[index].label = newLabel
   }
 }
 
 const handleDelete = (type: 'income' | 'expense', index: number) => {
-  if (type === 'income') {
+  if (type === 'income' && index < incomes.value.length) {
     incomes.value.splice(index, 1)
-    percentShares.value.splice(index, 1)
-    toPay.value.splice(index, 1)
-  } else {
+    if (index < percentShares.value.length) {
+      percentShares.value.splice(index, 1)
+    }
+    if (index < toPay.value.length) {
+      toPay.value.splice(index, 1)
+    }
+  } else if (type === 'expense' && index < expenses.value.length) {
     expenses.value.splice(index, 1)
   }
 }

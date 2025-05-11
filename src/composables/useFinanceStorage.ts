@@ -17,11 +17,18 @@ export const useFinanceStorage = () => {
   }
 
   const loadData = () => {
-    const savedIncomes = localStorage.getItem(INCOMES_KEY)
-    const savedExpenses = localStorage.getItem(EXPENSES_KEY)
+    try {
+      const savedIncomes = localStorage.getItem(INCOMES_KEY)
+      const savedExpenses = localStorage.getItem(EXPENSES_KEY)
 
-    incomes.value = savedIncomes ? JSON.parse(savedIncomes) : []
-    expenses.value = savedExpenses ? JSON.parse(savedExpenses) : []
+      incomes.value = savedIncomes ? JSON.parse(savedIncomes) : []
+      expenses.value = savedExpenses ? JSON.parse(savedExpenses) : []
+    } catch (error) {
+      console.error('Failed to parse localStorage data:', error)
+      // If JSON parsing fails, reset to empty arrays
+      incomes.value = []
+      expenses.value = []
+    }
   }
 
   return {

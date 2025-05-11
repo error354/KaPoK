@@ -6,18 +6,28 @@ export const useFinanceCalculations = (
   expenses: Ref<FinanceItem[]>,
 ) => {
   const totalIncome = computed(() => {
-    return incomes.value.reduce((sum, item) => sum + parseFloat(item.value || '0'), 0).toFixed(2)
+    return incomes.value
+      .reduce((sum, item) => {
+        const value = parseFloat(item.value || '0')
+        return sum + (isNaN(value) ? 0 : value)
+      }, 0)
+      .toFixed(2)
   })
 
   const totalExpense = computed(() => {
-    return expenses.value.reduce((sum, item) => sum + parseFloat(item.value || '0'), 0).toFixed(2)
+    return expenses.value
+      .reduce((sum, item) => {
+        const value = parseFloat(item.value || '0')
+        return sum + (isNaN(value) ? 0 : value)
+      }, 0)
+      .toFixed(2)
   })
 
   const calculatePercentShares = () => {
     const sumIncome = parseFloat(totalIncome.value)
     return incomes.value.map((item) => {
       const val = parseFloat(item.value || '0')
-      const percent = sumIncome > 0 ? (val / sumIncome) * 100 : 0
+      const percent = sumIncome > 0 ? ((isNaN(val) ? 0 : val) / sumIncome) * 100 : 0
       return {
         label: item.label,
         value: `${percent.toFixed(2)} %`,
@@ -30,7 +40,7 @@ export const useFinanceCalculations = (
     const sumExpense = parseFloat(totalExpense.value)
     return incomes.value.map((item) => {
       const val = parseFloat(item.value || '0')
-      const percent = sumIncome > 0 ? (val / sumIncome) * 100 : 0
+      const percent = sumIncome > 0 ? ((isNaN(val) ? 0 : val) / sumIncome) * 100 : 0
       const pay = (sumExpense * percent) / 100
       return {
         label: item.label,

@@ -98,6 +98,25 @@ describe('App', () => {
       expect(localStorage.setItem).toHaveBeenCalledWith('incomes', JSON.stringify(vm.incomes))
       expect(localStorage.setItem).toHaveBeenCalledWith('expenses', JSON.stringify(vm.expenses))
     })
+
+    it('#A3 handles empty localStorage', () => {
+      const wrapper = mount(App)
+      const vm = wrapper.vm as unknown as AppInstance
+
+      expect(vm.incomes).toEqual([])
+      expect(vm.expenses).toEqual([])
+    })
+
+    it('#A4 handles invalid JSON in localStorage', () => {
+      localStorage.setItem('incomes', 'invalid-json')
+      localStorage.setItem('expenses', 'invalid-json')
+
+      const wrapper = mount(App)
+      const vm = wrapper.vm as unknown as AppInstance
+
+      expect(vm.incomes).toEqual([])
+      expect(vm.expenses).toEqual([])
+    })
   })
 
   describe('Calculations', () => {
@@ -154,6 +173,64 @@ describe('App', () => {
       expect(vm.toPay).toEqual([
         { label: 'Income 1', value: '50.00' },
         { label: 'Income 2', value: '100.00' },
+      ])
+    })
+
+    it('#B4 handles empty income list', async () => {
+      const wrapper = mount(App)
+      const vm = wrapper.vm as unknown as AppInstance
+
+      vm.incomes = []
+      vm.expenses = [{ label: 'Expense 1', value: '150' }]
+
+      await vm.onCalculate()
+
+      expect(vm.totalIncome).toBe('0.00')
+      expect(vm.percentShares).toEqual([])
+      expect(vm.toPay).toEqual([])
+    })
+
+    it('#B5 handles zero values', async () => {
+      const wrapper = mount(App)
+      const vm = wrapper.vm as unknown as AppInstance
+
+      vm.incomes = [
+        { label: 'Income 1', value: '0' },
+        { label: 'Income 2', value: '0' },
+      ]
+      vm.expenses = [{ label: 'Expense 1', value: '0' }]
+
+      await vm.onCalculate()
+
+      expect(vm.totalIncome).toBe('0.00')
+      expect(vm.totalExpense).toBe('0.00')
+      expect(vm.percentShares).toEqual([
+        { label: 'Income 1', value: '0.00 %' },
+        { label: 'Income 2', value: '0.00 %' },
+      ])
+      expect(vm.toPay).toEqual([
+        { label: 'Income 1', value: '0.00' },
+        { label: 'Income 2', value: '0.00' },
+      ])
+    })
+
+    it('#B6 handles invalid number values', async () => {
+      const wrapper = mount(App)
+      const vm = wrapper.vm as unknown as AppInstance
+
+      vm.incomes = [
+        { label: 'Income 1', value: 'invalid' },
+        { label: 'Income 2', value: '200' },
+      ]
+      vm.expenses = [{ label: 'Expense 1', value: 'not-a-number' }]
+
+      await vm.onCalculate()
+
+      expect(vm.totalIncome).toBe('200.00')
+      expect(vm.totalExpense).toBe('0.00')
+      expect(vm.percentShares).toEqual([
+        { label: 'Income 1', value: '0.00 %' },
+        { label: 'Income 2', value: '100.00 %' },
       ])
     })
   })
@@ -226,6 +303,66 @@ describe('App', () => {
       vm.handleDelete('expense', 0)
 
       expect(vm.expenses.length).toBe(0)
+    })
+
+    it('#C6 handles empty label for income', () => {
+      const wrapper = mount(App)
+      const vm = wrapper.vm as unknown as AppInstance
+      const initialLength = vm.incomes.length
+
+      vm.handleIncomeAdd('', '100')
+
+      expect(vm.incomes.length).toBe(initialLength + 1)
+      expect(vm.incomes[initialLength]).toEqual({
+        label: '',
+        value: '100',
+      })
+    })
+
+    it('#C7 handles empty value for expense', () => {
+      const wrapper = mount(App)
+      const vm = wrapper.vm as unknown as AppInstance
+      const initialLength = vm.expenses.length
+
+      vm.handleExpenseAdd('New Expense', '')
+
+      expect(vm.expenses.length).toBe(initialLength + 1)
+      expect(vm.expenses[initialLength]).toEqual({
+        label: 'New Expense',
+        value: '',
+      })
+    })
+
+    it('#C8 handles editing non-existent index', () => {
+      const wrapper = mount(App)
+      const vm = wrapper.vm as unknown as AppInstance
+
+      vm.incomes = [{ label: 'Test Income', value: '100' }]
+      vm.percentShares = [{ label: 'Test Income', value: '' }]
+      vm.toPay = [{ label: 'Test Income', value: '' }]
+
+      // Should not throw error when editing non-existent index
+      vm.handleEdit('income', 999, 'New Label')
+
+      expect(vm.incomes[0].label).toBe('Test Income')
+      expect(vm.percentShares[0].label).toBe('Test Income')
+      expect(vm.toPay[0].label).toBe('Test Income')
+    })
+
+    it('#C9 handles deleting non-existent index', () => {
+      const wrapper = mount(App)
+      const vm = wrapper.vm as unknown as AppInstance
+
+      vm.incomes = [{ label: 'Test Income', value: '100' }]
+      vm.percentShares = [{ label: 'Test Income', value: '' }]
+      vm.toPay = [{ label: 'Test Income', value: '' }]
+
+      // Should not throw error when deleting non-existent index
+      vm.handleDelete('income', 999)
+
+      expect(vm.incomes.length).toBe(1)
+      expect(vm.percentShares.length).toBe(1)
+      expect(vm.toPay.length).toBe(1)
     })
   })
 })
