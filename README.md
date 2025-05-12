@@ -55,7 +55,10 @@ npm run lint
 - `src/components/` - Vue components
 - `src/composables/` - Reusable composition functions
 - `src/assets/` - Static assets and styles
-- `src/components/__tests__/` - Unit tests
+- `src/i18n/` - Internationalization files
+- `src/test/` - Test setup files
+- `src/types/` - TypeScript type definitions
+- `src/*/__tests__/` - Unit tests
 
 ## Contributing
 
