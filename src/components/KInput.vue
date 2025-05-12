@@ -92,5 +92,8 @@ input {
   min-width: 0;
   background-color: var(--input-color);
   border-color: var(--color-grey);
+  &:not([readonly]):hover {
+    border-color: var(--color-primary);
+  }
 }
 </style>
