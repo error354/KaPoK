@@ -38,8 +38,10 @@
     <ModalsContainer />
     <div class="language-switcher">
       <button @click="switchLanguage" :data-active="locale">
-        <div>EN</div>
-        <div>PL</div>
+        <div class="language-switcher-buttons-container">
+          <div class="language-switcher-button">EN</div>
+          <div class="language-switcher-button">PL</div>
+        </div>
       </button>
     </div>
   </div>
@@ -156,7 +158,6 @@ onMounted(() => {
   button {
     position: relative;
     display: flex;
-    gap: 2px;
     padding: 4px;
     border-radius: 4px !important;
     background: var(--columnBgC);
@@ -171,7 +172,16 @@ onMounted(() => {
       transform: scale(1);
     }
 
-    div {
+    div.language-switcher-buttons-container {
+      display: flex;
+      gap: 2px;
+      background-color: var(--input-color);
+      border-radius: 4px;
+      border: 1px solid var(--color-grey);
+      box-sizing: content-box;
+    }
+
+    div.language-switcher-button {
       position: relative;
       z-index: 1;
       padding: 4px 8px;
@@ -197,7 +207,7 @@ onMounted(() => {
       height: calc(100% - 8px);
       background: var(--color-primary);
       border-radius: 4px;
-      border: 1px solid var(--color-grey);
+      border: 1px solid var(--color-primary);
       transition: transform 0.2s ease;
     }
 
@@ -206,10 +216,10 @@ onMounted(() => {
     }
 
     &[data-active='pl'] {
-      div:first-child {
+      div.language-switcher-button:first-child {
         color: var(--color-primary);
       }
-      div:last-child {
+      div.language-switcher-button:last-child {
         color: var(--input-color);
       }
     }
