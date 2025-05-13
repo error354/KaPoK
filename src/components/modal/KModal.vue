@@ -9,7 +9,7 @@
     content-transition="vfm-slide-up"
     @opened="onModalOpened"
   >
-    <div class="modal-wrapper" ref="modalContent" @keydown.enter="submit">
+    <div class="modal-wrapper" ref="modalContent" @keydown.enter="handleEnterKey">
       <div class="modal-header">
         <h4>{{ title }}</h4>
       </div>
@@ -75,6 +75,13 @@ const onModalOpened = () => {
       firstInput.focus()
     }
   }, 10)
+}
+
+const handleEnterKey = (event: KeyboardEvent) => {
+  if (!props.disabled) {
+    event.preventDefault()
+    submit()
+  }
 }
 </script>
 
