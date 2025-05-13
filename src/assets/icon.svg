@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   width="200mm"
+   height="200mm"
+   viewBox="0 0 200 200"
+   version="1.1"
+   id="svg1"
+   inkscape:version="1.4.2 (ebf0e94, 2025-05-08)"
+   sodipodi:docname="icon.svg"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:xlink="http://www.w3.org/1999/xlink"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="true"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:document-units="mm"
+     showguides="true"
+     inkscape:zoom="0.5"
+     inkscape:cx="-45"
+     inkscape:cy="555"
+     inkscape:window-width="2560"
+     inkscape:window-height="1351"
+     inkscape:window-x="-9"
+     inkscape:window-y="-9"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="layer1" />
+  <defs
+     id="defs1">
+    <linearGradient
+       id="linearGradient10"
+       inkscape:collect="always">
+      <stop
+         style="stop-color:#954ba5;stop-opacity:1;"
+         offset="0"
+         id="stop10" />
+      <stop
+         style="stop-color:#65b5eb;stop-opacity:1;"
+         offset="1"
+         id="stop11" />
+    </linearGradient>
+    <linearGradient
+       inkscape:collect="always"
+       xlink:href="#linearGradient10"
+       id="linearGradient11"
+       x1="108.37214"
+       y1="155.52937"
+       x2="39.472393"
+       y2="45.266727"
+       gradientUnits="userSpaceOnUse"
+       gradientTransform="matrix(0.90676887,0,0,1,5.0642673,0)" />
+  </defs>
+  <g
+     inkscape:label="Calculator"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <path
+       id="rect1"
+       style="fill:url(#linearGradient11);fill-opacity:1;stroke-width:0.267581;stroke-dasharray:none"
+       d="m 96.109895,9.698116 v 0.00103 H 22.21363 c -5.0235,0 -9.067663,4.459906 -9.067663,9.999906 V 181.09696 c 0,5.54 4.044163,9.9999 9.067663,9.9999 h 73.896265 v 5.2e-4 h 17.264055 c 6.09997,0 9.3524,-6.11247 9.3524,-9.59321 v -79.20912 h 0.41186 c 1.42832,5.14428 2.47236,8.47571 3.13159,9.9937 l 34.44441,78.80863 h 22.11286 c 4.11217,0 10.21899,-4.0185 6.90914,-9.75134 -17.98369,-31.14867 -40.14638,-85.122973 -40.14638,-85.122973 0,0 22.20837,-52.286391 37.55739,-78.871671 1.43943,-2.49317 1.27627,-7.65328 -4.15168,-7.65328 h -23.92929 l -32.63212,75.646029 c -1.53819,4.385283 -2.6367,7.759006 -3.29592,10.120312 h -0.41186 V 21.828125 c 0,-12.1919203 -8.627,-12.130009 -10.74146,-12.130009 z m -5.103565,0.00258 h 5.103565 V 191.09635 H 91.00633 V 71.563074 H 31.70194 c -5.638382,0 -10.177673,-5.421596 -10.177673,-12.155847 V 30.505115 c 0,-6.734252 4.539291,-12.155847 10.177673,-12.155847 H 91.00633 Z M 36.874234,78.999829 A 15.335,15.334951 0 0 1 52.209215,94.33481 15.335,15.334951 0 0 1 36.874234,109.66979 15.335,15.334951 0 0 1 21.539253,94.33481 15.335,15.334951 0 0 1 36.874234,78.999829 Z m 35.416443,0 A 15.334951,15.334951 0 0 1 87.625658,94.33481 15.334951,15.334951 0 0 1 72.290677,109.66979 15.334951,15.334951 0 0 1 56.955696,94.33481 15.334951,15.334951 0 0 1 72.290677,78.999829 Z M 36.856664,117.00009 a 15.334951,15.334951 0 0 1 15.334981,15.33498 15.334951,15.334951 0 0 1 -15.334981,15.33499 15.334951,15.334951 0 0 1 -15.334981,-15.33499 15.334951,15.334951 0 0 1 15.334981,-15.33498 z m 35.416443,0 a 15.334951,15.334951 0 0 1 15.334981,15.33498 15.334951,15.334951 0 0 1 -15.334981,15.33499 15.334951,15.334951 0 0 1 -15.334981,-15.33499 15.334951,15.334951 0 0 1 15.334981,-15.33498 z m -36.838062,36.9409 h 38.440548 c 7.589921,0 13.700456,6.69012 13.700456,15.00012 v 0.73535 c 0,8.31 -6.110535,15.00012 -13.700456,15.00012 H 35.435045 c -7.589921,0 -13.699939,-6.69012 -13.699939,-15.00012 v -0.73535 c 0,-8.31 6.110018,-15.00012 13.699939,-15.00012 z" />
+  </g>
+  <g
+     inkscape:groupmode="layer"
+     id="layer2"
+     inkscape:label="Screen and buttons" />
+  <g
+     inkscape:groupmode="layer"
+     id="layer3"
+     inkscape:label="K" />
+</svg>
