@@ -2,6 +2,9 @@
 
 KaPoK is a modern cost-sharing calculator built with Vue 3 and TypeScript. It helps users manage and split expenses between multiple parties, calculating proportional shares based on individual contributions.
 
+## Demo
+https://error354.github.io/KaPoK/
+
 ## Features
 
 - 📊 Calculate proportional shares based on contributions
